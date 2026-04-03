@@ -1,3 +1,5 @@
+#include "high_level.h"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <stdbool.h>
@@ -98,7 +100,7 @@ static void run_mission(void)
 
 void task_high_level(void *pvParameters)
 {
-    // Inicialização (roda uma vez)
+    // Inicialização (executa uma vez)
     run_init();
 
     while (1)
