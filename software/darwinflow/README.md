@@ -61,7 +61,7 @@ darwinflow/
 │   │   ├── low_level.c               # 🔥 camada completa
 │   │   ├── low_level.h
 │   │   │
-│   │   ├── Drivers/
+│   │   ├── Drivers/                # vai fazer apenas os reads e enviar para o mid level
 │   │   │   ├── motor_driver.h
 │   │   │   ├── encoder_driver.h
 │   │   │   ├── imu_driver.h
