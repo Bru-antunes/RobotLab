@@ -4,7 +4,9 @@
 
 #include "robot_config.h"
 
+// ============================
 // Interface com Mid Level
+// ============================
 extern volatile bool target_detected;
 
 // ============================
@@ -13,25 +15,33 @@ extern volatile bool target_detected;
 
 static void run_init(void)
 {
-    #if INIT_STRATEGY == 1
-        // Estratégia 1
+    switch (INIT_STRATEGY)
+    {
+        case 1:
+            // Estratégia 1
+            break;
 
-    #elif INIT_STRATEGY == 2
-        // Estratégia 2
+        case 2:
+            // Estratégia 2
+            break;
 
-    #elif INIT_STRATEGY == 3
-        // Estratégia 3
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        case 3:
+            // Estratégia 3
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            break;
 
-    #elif INIT_STRATEGY == 4
-        // Estratégia 4
+        case 4:
+            // Estratégia 4
+            break;
 
-    #elif INIT_STRATEGY == 5
-        // Estratégia 5
+        case 5:
+            // Estratégia 5
+            break;
 
-    #else
-        // fallback (nenhuma válida)
-    #endif
+        default:
+            // fallback
+            break;
+    }
 }
 
 // ============================
@@ -40,18 +50,24 @@ static void run_init(void)
 
 static void run_navigation(void)
 {
-    #if NAV_STRATEGY == 1
-        // Estratégia NAV 1
+    switch (NAV_STRATEGY)
+    {
+        case 1:
+            // NAV 1: girar procurando alvo
+            break;
 
-    #elif NAV_STRATEGY == 2
-        // Estratégia NAV 2
+        case 2:
+            // NAV 2: zigue-zague
+            break;
 
-    #elif NAV_STRATEGY == 3
-        // Estratégia NAV 3
+        case 3:
+            // NAV 3
+            break;
 
-    #else
-        // fallback
-    #endif
+        default:
+            // fallback
+            break;
+    }
 }
 
 // ============================
@@ -60,15 +76,20 @@ static void run_navigation(void)
 
 static void run_mission(void)
 {
-    #if MISSION_STRATEGY == 1
-        // Estratégia MISSÃO 1
+    switch (MISSION_STRATEGY)
+    {
+        case 1:
+            // MISSÃO 1: ataque direto
+            break;
 
-    #elif MISSION_STRATEGY == 2
-        // Estratégia MISSÃO 2
+        case 2:
+            // MISSÃO 2: ataque controlado
+            break;
 
-    #else
-        // fallback
-    #endif
+        default:
+            // fallback
+            break;
+    }
 }
 
 // ============================
@@ -77,6 +98,7 @@ static void run_mission(void)
 
 void task_high_level(void *pvParameters)
 {
+    // Inicialização (roda uma vez)
     run_init();
 
     while (1)
