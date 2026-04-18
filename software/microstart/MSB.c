@@ -89,9 +89,11 @@ int main(void) {
 void f_acao (void){
     switch (decoded_command) {
         case 0x80:
+            if (!Flag_2){
             PORTB ^= (1 << PB1);
             Flag_1 = 1;
             PORTB &= ~(1 << PB2);
+            }
             break;
 
         case 0x81:
