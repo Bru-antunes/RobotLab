@@ -3,6 +3,11 @@ import zipfile
 import sys
 import subprocess
 import platform
+import urllib.request
+
+# =========================
+# PATHS
+# =========================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -10,9 +15,15 @@ LIBS_DIR = os.path.join(BASE_DIR, "libs")
 TOOLS_DIR = os.path.join(BASE_DIR, "tools")
 REQUIREMENTS_FILE = os.path.join(LIBS_DIR, "requirements.txt")
 
+# =========================
+# DOWNLOAD LINKS
+# =========================
+
+AVR_GCC_URL = "https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/avr8-gnu-toolchain-4.0.0.52-win32.any.x86_64.zip"
+AVRDUDE_URL = "https://github.com/avrdudes/avrdude/releases/download/v8.1/avrdude-v8.1-windows-x64.zip"
 
 # =========================
-# Utils
+# UTILS
 # =========================
 
 def run(cmd):
@@ -24,19 +35,30 @@ def run(cmd):
         sys.exit()
 
 
+def download(url, dest):
+    print(f"\n🌐 Downloading / Baixando:\n{url}")
+
+    try:
+        urllib.request.urlretrieve(url, dest)
+        print("✅ Download completed / Download concluído")
+    except Exception as e:
+        print("❌ Download failed / Falha no download")
+        print(e)
+        sys.exit()
+
+
 def extract(zip_path, destination):
     print(f"\n📦 Extracting / Extraindo: {zip_path}")
 
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(destination)
+    try:
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(destination)
+    except Exception as e:
+        print("❌ Extraction failed / Falha na extração")
+        print(e)
+        sys.exit()
 
     print("✅ Extraction completed / Extração concluída.")
-
-
-def check_file(path):
-    if not os.path.exists(path):
-        print(f"❌ File not found / Arquivo não encontrado: {path}")
-        sys.exit()
 
 
 def install_python_deps():
@@ -46,7 +68,7 @@ def install_python_deps():
         print("❌ requirements.txt not found / requirements.txt não encontrado")
         sys.exit()
 
-    run(f"{sys.executable} -m pip install -r {REQUIREMENTS_FILE}")
+    run(f"{sys.executable} -m pip install -r \"{REQUIREMENTS_FILE}\"")
 
     print("✅ Python dependencies installed / Dependências Python instaladas.")
 
@@ -57,47 +79,53 @@ def add_to_path(path):
 
 
 # =========================
-# Windows Setup
+# WINDOWS SETUP
 # =========================
 
 def setup_windows():
     print("\n🪟 Windows detected / Windows detectado")
 
+    os.makedirs(LIBS_DIR, exist_ok=True)
     os.makedirs(TOOLS_DIR, exist_ok=True)
 
-    gcc_zip = os.path.join(LIBS_DIR, "avr8-gnu-toolchain-4.0.0.52-win32.any.x86_64.zip")
-    avrdude_zip = os.path.join(LIBS_DIR, "avrdude-v8.1-windows-x64.zip")
+    gcc_zip = os.path.join(LIBS_DIR, "avr-gcc.zip")
+    avrdude_zip = os.path.join(LIBS_DIR, "avrdude.zip")
 
-    check_file(gcc_zip)
-    check_file(avrdude_zip)
+    # DOWNLOAD AUTOMÁTICO
+    if not os.path.exists(gcc_zip):
+        download(AVR_GCC_URL, gcc_zip)
+    else:
+        print("✅ AVR-GCC already downloaded / Já baixado")
 
+    if not os.path.exists(avrdude_zip):
+        download(AVRDUDE_URL, avrdude_zip)
+    else:
+        print("✅ AVRDUDE already downloaded / Já baixado")
+
+    # EXTRAÇÃO
     extract(gcc_zip, TOOLS_DIR)
     extract(avrdude_zip, TOOLS_DIR)
 
-    # Add to PATH
+    # CONFIGURAR PATH
     for root, dirs, files in os.walk(TOOLS_DIR):
-        if "bin" in root.lower():
+        if root.lower().endswith("bin"):
             add_to_path(root)
 
-        if "avrdude" in root.lower() and root.endswith("bin"):
-            add_to_path(root)
-
-    print("✅ Windows setup complete / Setup Windows concluído")
+    print("\n✅ Windows setup complete / Setup Windows concluído")
 
 
 # =========================
-# Linux Setup
+# LINUX SETUP
 # =========================
 
 def setup_linux():
     print("\n🐧 Linux detected / Linux detectado")
-
-    print("\n⚠️ This requires sudo privileges / Necessário sudo")
+    print("⚠️ Requires sudo privileges / Necessário sudo")
 
     run("sudo apt-get update")
     run("sudo apt-get install -y avrdude gcc-avr avr-libc")
 
-    print("✅ Linux setup complete / Setup Linux concluído")
+    print("\n✅ Linux setup complete / Setup Linux concluído")
 
 
 # =========================
@@ -124,7 +152,7 @@ def main():
         sys.exit()
 
     print("\n🎉 Setup completed / Configuração concluída!")
-    print("👉 You can now run the main script / Agora você pode rodar o script principal.")
+    print("👉 You can now run the programmer script / Agora você pode rodar o programmer.")
 
 
 if __name__ == "__main__":
