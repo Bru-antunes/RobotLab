@@ -4,15 +4,17 @@ import sys
 import subprocess
 import platform
 import urllib.request
+import shutil
 
 # =========================
-# PATHS
+# BASE PATHS
 # =========================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 LIBS_DIR = os.path.join(BASE_DIR, "libs")
 TOOLS_DIR = os.path.join(BASE_DIR, "tools")
+
 REQUIREMENTS_FILE = os.path.join(LIBS_DIR, "requirements.txt")
 
 # =========================
@@ -23,59 +25,80 @@ AVR_GCC_URL = "https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/Pr
 AVRDUDE_URL = "https://github.com/avrdudes/avrdude/releases/download/v8.1/avrdude-v8.1-windows-x64.zip"
 
 # =========================
-# UTILS
+# MESSAGES (EN/PT)
+# =========================
+
+def msg(en, pt):
+    return f"{en} / {pt}"
+
+# =========================
+# UTILITIES
 # =========================
 
 def run(cmd):
-    print(f"\n🔧 {cmd}")
+    print(msg(f"Running: {cmd}", f"Executando: {cmd}"))
     result = subprocess.run(cmd, shell=True)
-
     if result.returncode != 0:
-        print("❌ Command failed / Comando falhou")
+        print(msg("Command failed", "Comando falhou"))
         sys.exit()
 
 
 def download(url, dest):
-    print(f"\n🌐 Downloading / Baixando:\n{url}")
-
-    try:
-        urllib.request.urlretrieve(url, dest)
-        print("✅ Download completed / Download concluído")
-    except Exception as e:
-        print("❌ Download failed / Falha no download")
-        print(e)
-        sys.exit()
+    print(msg(f"Downloading {url}", f"Baixando {url}"))
+    urllib.request.urlretrieve(url, dest)
+    print(msg("Download complete", "Download concluído"))
 
 
-def extract(zip_path, destination):
-    print(f"\n📦 Extracting / Extraindo: {zip_path}")
+def extract_zip(zip_path, extract_to):
+    print(msg(f"Extracting {zip_path}", f"Extraindo {zip_path}"))
 
-    try:
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(destination)
-    except Exception as e:
-        print("❌ Extraction failed / Falha na extração")
-        print(e)
-        sys.exit()
+    temp_dir = zip_path + "_temp"
 
-    print("✅ Extraction completed / Extração concluída.")
+    if os.path.exists(temp_dir):
+        shutil.rmtree(temp_dir)
 
+    os.makedirs(temp_dir, exist_ok=True)
 
-def install_python_deps():
-    print("\n🐍 Installing Python dependencies / Instalando dependências Python...")
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(temp_dir)
 
-    if not os.path.exists(REQUIREMENTS_FILE):
-        print("❌ requirements.txt not found / requirements.txt não encontrado")
-        sys.exit()
+    # evita poluir tools com 4000 arquivos soltos
+    for item in os.listdir(temp_dir):
+        src = os.path.join(temp_dir, item)
+        dst = os.path.join(extract_to, item)
 
-    run(f"{sys.executable} -m pip install -r \"{REQUIREMENTS_FILE}\"")
+        if os.path.exists(dst):
+            shutil.rmtree(dst)
 
-    print("✅ Python dependencies installed / Dependências Python instaladas.")
+        shutil.move(src, dst)
+
+    shutil.rmtree(temp_dir)
+
+    print(msg("Extraction done", "Extração concluída"))
 
 
 def add_to_path(path):
-    print(f"➕ Adding to PATH / Adicionando ao PATH: {path}")
-    os.environ["PATH"] += os.pathsep + path
+    if path not in os.environ["PATH"]:
+        os.environ["PATH"] += os.pathsep + path
+        print(msg(f"Added to PATH: {path}", f"Adicionado ao PATH: {path}"))
+
+
+def is_installed(binary):
+    return shutil.which(binary) is not None
+
+
+# =========================
+# INSTALL CHECKS
+# =========================
+
+def check_tools():
+    gcc_ok = is_installed("avr-gcc")
+    dude_ok = is_installed("avrdude")
+
+    print(msg(f"avr-gcc installed: {gcc_ok}", f"avr-gcc instalado: {gcc_ok}"))
+    print(msg(f"avrdude installed: {dude_ok}", f"avrdude instalado: {dude_ok}"))
+
+    return gcc_ok and dude_ok
 
 
 # =========================
@@ -83,7 +106,7 @@ def add_to_path(path):
 # =========================
 
 def setup_windows():
-    print("\n🪟 Windows detected / Windows detectado")
+    print(msg("Windows detected", "Windows detectado"))
 
     os.makedirs(LIBS_DIR, exist_ok=True)
     os.makedirs(TOOLS_DIR, exist_ok=True)
@@ -91,27 +114,23 @@ def setup_windows():
     gcc_zip = os.path.join(LIBS_DIR, "avr-gcc.zip")
     avrdude_zip = os.path.join(LIBS_DIR, "avrdude.zip")
 
-    # DOWNLOAD AUTOMÁTICO
-    if not os.path.exists(gcc_zip):
-        download(AVR_GCC_URL, gcc_zip)
-    else:
-        print("✅ AVR-GCC already downloaded / Já baixado")
+    if not check_tools():
 
-    if not os.path.exists(avrdude_zip):
-        download(AVRDUDE_URL, avrdude_zip)
-    else:
-        print("✅ AVRDUDE already downloaded / Já baixado")
+        if not os.path.exists(gcc_zip):
+            download(AVR_GCC_URL, gcc_zip)
 
-    # EXTRAÇÃO
-    extract(gcc_zip, TOOLS_DIR)
-    extract(avrdude_zip, TOOLS_DIR)
+        if not os.path.exists(avrdude_zip):
+            download(AVRDUDE_URL, avrdude_zip)
 
-    # CONFIGURAR PATH
+        extract_zip(gcc_zip, TOOLS_DIR)
+        extract_zip(avrdude_zip, TOOLS_DIR)
+
+    # add bin folders only
     for root, dirs, files in os.walk(TOOLS_DIR):
         if root.lower().endswith("bin"):
             add_to_path(root)
 
-    print("\n✅ Windows setup complete / Setup Windows concluído")
+    print(msg("Windows setup complete", "Setup Windows concluído"))
 
 
 # =========================
@@ -119,13 +138,64 @@ def setup_windows():
 # =========================
 
 def setup_linux():
-    print("\n🐧 Linux detected / Linux detectado")
-    print("⚠️ Requires sudo privileges / Necessário sudo")
+    print(msg("Linux detected", "Linux detectado"))
 
     run("sudo apt-get update")
     run("sudo apt-get install -y avrdude gcc-avr avr-libc")
 
-    print("\n✅ Linux setup complete / Setup Linux concluído")
+    print(msg("Linux setup complete", "Setup Linux concluído"))
+
+
+# =========================
+# VS CODE CONFIG (FIXED)
+# =========================
+
+def generate_vscode_properties():
+    import json
+
+    vscode_dir = os.path.join(BASE_DIR, ".vscode")
+    os.makedirs(vscode_dir, exist_ok=True)
+
+    config_path = os.path.join(vscode_dir, "c_cpp_properties.json")
+
+    avr_include_paths = []
+
+    for root, dirs, files in os.walk(TOOLS_DIR):
+        if "avr" in root.lower() and "include" in root.lower():
+            avr_include_paths.append(root)
+
+    compiler_path = "avr-gcc"
+
+    for root, dirs, files in os.walk(TOOLS_DIR):
+        if root.lower().endswith("bin"):
+            if any("avr-gcc" in f for f in files):
+                compiler_path = os.path.join(root, "avr-gcc.exe")
+
+    config = {
+        "configurations": [
+            {
+                "name": "ATtiny13A",
+                "includePath": [
+                    "${workspaceFolder}/**",
+                    *avr_include_paths
+                ],
+                "defines": [
+                    "__AVR_ATtiny13A__",
+                    "__AVR_ATtiny13__"
+                ],
+                "compilerPath": compiler_path,
+                "intelliSenseMode": "gcc-x64",
+                "cStandard": "c11"
+            }
+        ],
+        "version": 4
+    }
+
+    with open(config_path, "w") as f:
+        json.dump(config, f, indent=4)
+
+    print(msg("VS Code configured for ATtiny13A",
+              "VS Code configurado para ATtiny13A"))
 
 
 # =========================
@@ -133,26 +203,21 @@ def setup_linux():
 # =========================
 
 def main():
-    print("\n===== AVR MULTI-PLATFORM SETUP =====")
-    print("===== CONFIGURAÇÃO MULTIPLATAFORMA AVR =====\n")
+    print("\n===== AVR MULTI PLATFORM SETUP =====")
 
-    # 1. Python deps
-    install_python_deps()
-
-    sistema = platform.system()
-
-    if sistema == "Windows":
+    if platform.system() == "Windows":
         setup_windows()
 
-    elif sistema == "Linux":
+    elif platform.system() == "Linux":
         setup_linux()
 
     else:
-        print(f"❌ Unsupported system / Sistema não suportado: {sistema}")
+        print(msg("Unsupported system", "Sistema não suportado"))
         sys.exit()
 
-    print("\n🎉 Setup completed / Configuração concluída!")
-    print("👉 You can now run the programmer script / Agora você pode rodar o programmer.")
+    generate_vscode_properties()
+
+    print(msg("Setup completed!", "Configuração concluída!"))
 
 
 if __name__ == "__main__":
