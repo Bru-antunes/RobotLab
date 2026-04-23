@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "ATtiny13A",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "__AVR_ATtiny13A__",
+                "__AVR_ATtiny13__"
+            ],
+            "compilerPath": "avr-gcc",
+            "intelliSenseMode": "gcc-x64",
+            "cStandard": "c11"
+        }
+    ],
+    "version": 4
+}
