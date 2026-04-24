@@ -278,7 +278,7 @@ Principais modificações:
 
 ## 🔗 Links do Projeto
 
-* Software: **[INSIRA LINK DO SOFTWARE]**
+* Software: **[https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR]**
 * Hardware: **[INSIRA LINK DO HARDWARE]**
 
 ---
