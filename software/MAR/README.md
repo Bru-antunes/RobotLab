@@ -211,7 +211,7 @@ In this project, an **Arduino Uno configured as ISP (In-System Programmer)** was
 ### 📷 ATTINY13A Pinout
 
 <p align="center">
-  <img src="images/attiny13a_pinout.png" width="400">
+  <img src="../../images/attiny13a_pinout.png" width="400">
 </p>
 
 ---
@@ -397,7 +397,7 @@ Neste projeto, foi utilizado um **Arduino Uno configurado como ISP (In-System Pr
 ### 📷 Pinagem do ATTINY13A
 
 <p align="center">
-  <img src="images/attiny13a_pinout.png" width="400">
+  <img src="../../images/attiny13a_pinout.png" width="400">
 </p>
 
 ---
