@@ -1,72 +1,102 @@
 import os
 import json
 import shutil
+import sys
+import subprocess
 
 # =========================
-# FIND PROJECT ROOT
+# WORKSPACE DETECTION
 # =========================
 
-def find_project_root():
-    current = os.getcwd()
+def get_workspace():
+    ws = os.environ.get("VSCODE_WORKSPACE_FOLDER")
+    if ws:
+        return ws
 
-    while True:
-        if os.path.exists(os.path.join(current, ".git")):
-            return current
-
-        parent = os.path.dirname(current)
-        if parent == current:
-            break
-
-        current = parent
+    if len(sys.argv) > 1:
+        return sys.argv[1]
 
     return os.getcwd()
 
 
-WORKSPACE_ROOT = find_project_root()
+WORKSPACE = get_workspace()
 
-PROJECT_DIR = os.path.join(WORKSPACE_ROOT, "software", "MAR")
-CONFIG_DIR = os.path.join(WORKSPACE_ROOT, ".vscode")
-
+CONFIG_DIR = os.path.join(WORKSPACE, ".vscode")
 COMPILE_DB = os.path.join(CONFIG_DIR, "compile_commands.json")
 VSCODE_CONFIG = os.path.join(CONFIG_DIR, "c_cpp_properties.json")
 
 
 # =========================
-# FIND AVR-GCC
+# SAFE SUBPROCESS
+# =========================
+
+def safe_run(cmd):
+    try:
+        return subprocess.check_output(
+            cmd,
+            text=True,
+            stderr=subprocess.STDOUT,
+            timeout=3
+        ).strip()
+    except:
+        return ""
+
+
+# =========================
+# FIND TOOLCHAIN
 # =========================
 
 def find_avr_gcc():
-    path = shutil.which("avr-gcc")
-    if path:
-        return path
-
-    possible = [
-        r"C:\avr\bin\avr-gcc.exe",
-        r"C:\avr\avr\bin\avr-gcc.exe"
-    ]
-
-    for p in possible:
-        if os.path.exists(p):
-            return p
-
-    raise Exception("avr-gcc not found")
+    gcc = shutil.which("avr-gcc")
+    if gcc:
+        return gcc
+    raise Exception("avr-gcc not found in PATH")
 
 
-# =========================
-# FIND AVR INCLUDE (FIX REAL)
-# =========================
+def find_avr_include(gcc):
+    """
+    Encontra AVR libc corretamente (avr/io.h)
+    """
 
-def find_avr_include():
-    candidates = [
-        r"C:\avr\avr\include",
-        r"C:\avr\include"
-    ]
+    # 1. sysroot (melhor caso)
+    sysroot = safe_run([gcc, "-print-sysroot"])
+    if sysroot:
+        candidate = os.path.join(sysroot, "avr", "include")
+        if os.path.exists(os.path.join(candidate, "avr", "io.h")):
+            return candidate
 
-    for c in candidates:
-        if os.path.exists(c):
-            return c
+    # 2. instalação padrão Windows
+    fallback = r"C:\avr\avr\include"
+    if os.path.exists(os.path.join(fallback, "avr", "io.h")):
+        return fallback
+
+    # 3. busca relativa ao gcc
+    current = os.path.dirname(gcc)
+    for _ in range(6):
+        candidate = os.path.join(current, "avr", "include")
+        if os.path.exists(os.path.join(candidate, "avr", "io.h")):
+            return candidate
+        current = os.path.dirname(current)
 
     return ""
+
+
+# =========================
+# SOURCE DISCOVERY
+# =========================
+
+def find_sources():
+    sources = []
+
+    for root, _, files in os.walk(WORKSPACE):
+        if ".vscode" in root:
+            continue
+
+        for f in files:
+            if f.endswith(".c"):
+                sources.append(os.path.join(root, f))
+
+    return sources
 
 
 # =========================
@@ -75,48 +105,42 @@ def find_avr_include():
 
 def generate_compile_commands():
     gcc = find_avr_gcc()
-    avr_include = find_avr_include()
+    include_path = find_avr_include(gcc)
 
-    sources = []
-
-    for root, _, files in os.walk(PROJECT_DIR):
-        for f in files:
-            if f.endswith(".c"):
-                sources.append(os.path.join(root, f))
+    os.makedirs(CONFIG_DIR, exist_ok=True)
 
     data = []
 
-    for src in sources:
-        cmd = f'"{gcc}" -mmcu=attiny13a'
+    for src in find_sources():
 
-        if avr_include:
-            cmd += f' -I"{avr_include}"'
+        cmd = f'"{gcc}" -mmcu=attiny13a '
 
-        cmd += f' -c "{src}" -o "{src}.o"'
+        if include_path:
+            cmd += f'-I"{include_path}" '
+
+        cmd += f'-c "{src}" -o "{src}.o"'
 
         data.append({
-            "directory": PROJECT_DIR,
+            "directory": WORKSPACE,
             "command": cmd,
             "file": src
         })
 
-    os.makedirs(CONFIG_DIR, exist_ok=True)
-
     with open(COMPILE_DB, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
-    print("✔ compile_commands.json gerado")
+    print("✔ compile_commands.json generated")
 
 
 # =========================
-# VS CODE CONFIG (FIX REAL)
+# VS CODE CONFIG
 # =========================
 
 def write_vscode_config():
-    gcc = find_avr_gcc()
-    avr_include = find_avr_include()
-
     os.makedirs(CONFIG_DIR, exist_ok=True)
+
+    gcc = find_avr_gcc()
+    include_path = find_avr_include(gcc)
 
     config = {
         "version": 4,
@@ -124,25 +148,20 @@ def write_vscode_config():
             {
                 "name": "AVR",
 
-                # 🔥 essencial (corrige 80% dos erros)
                 "compilerPath": gcc,
 
-                # 🔥 usa compile_commands
                 "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json",
 
-                # 🔥 include global do AVR
                 "includePath": [
-                    "${workspaceFolder}/**",
-                    avr_include
-                ] if avr_include else [
+                    include_path,
+                    "${workspaceFolder}/**"
+                ] if include_path else [
                     "${workspaceFolder}/**"
                 ],
 
-                # 🔥 ajuda o IntelliSense a resolver headers
                 "browse": {
-                    "path": [
-                        avr_include
-                    ] if avr_include else []
+                    "path": [include_path] if include_path else [],
+                    "limitSymbolsToIncludedHeaders": True
                 },
 
                 "defines": [
@@ -158,7 +177,7 @@ def write_vscode_config():
     with open(VSCODE_CONFIG, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=4)
 
-    print("✔ VS Code configurado corretamente")
+    print("✔ c_cpp_properties.json generated")
 
 
 # =========================
@@ -166,9 +185,8 @@ def write_vscode_config():
 # =========================
 
 def main():
-    print("=== AVR SETUP FINAL PRO FIX ===")
-    print(f"ROOT: {WORKSPACE_ROOT}")
-    print(f"PROJECT: {PROJECT_DIR}")
+    print("=== AVR SETUP FINAL ===")
+    print(f"WORKSPACE: {WORKSPACE}")
     print(f"CONFIG: {CONFIG_DIR}")
 
     generate_compile_commands()
