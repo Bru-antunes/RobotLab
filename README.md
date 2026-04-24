@@ -1,6 +1,5 @@
 # RobotLab
-Desenvolvimento de robótica open source
-
+open source robotics
 
 
 
