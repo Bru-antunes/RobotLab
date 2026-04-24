@@ -27,8 +27,8 @@ Main adaptations:
 
 ## 🔗 Project Links
 
-* Software: **[INSERT SOFTWARE LINK HERE]**
-* Hardware: **[INSERT HARDWARE LINK HERE]**
+- 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
+- 🔩 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
 
 ---
 
@@ -278,8 +278,8 @@ Principais modificações:
 
 ## 🔗 Links do Projeto
 
-* Software: **[INSIRA LINK DO SOFTWARE]**
-* Hardware: **[INSIRA LINK DO HARDWARE]**
+- 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
+- 🔩 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
 
 ---
 
