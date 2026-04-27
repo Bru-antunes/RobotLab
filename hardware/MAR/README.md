@@ -32,218 +32,196 @@ Main adaptations:
 
 ---
 
-## 📁 Project Structure
+## 📐 Board Overview
 
-```
-MAR/
-├── MAR_setup.py
-├── MAR_programmer.py
-├── MAR.c
-├── libs/
-├── tools/
-└── README.md
-```
+The MAR (Remote Activation Module) hardware was designed to be **compact, lightweight, and easy to integrate** into competitive robotics platforms.
 
----
+**Board dimensions:**  
 
-## ⚙️ Requirements
+📏 **X mm x Y mm** *(adjust after final PCB)*
 
-* Python 3
-* Windows or Linux
+**Component size standard:**  
+
+📦 SMD **0603**
 
 ---
 
-# 🚀 SETUP
-
-## 🔹 Automatic Setup (Recommended)
-
-Run:
-
-```bash
-python MAR_setup.py
-```
-
-### What this script does:
-
-1. Installs Python dependencies (`pyserial`)
-2. Detects operating system
-3. On Windows:
-
-   * Extracts `avr-gcc` and `avrdude` from `libs/`
-   * Places them inside `tools/`
-   * Configures PATH dynamically
-4. On Linux:
-
-   * Runs:
-
-     ```bash
-     sudo apt-get update
-     sudo apt-get install avrdude gcc-avr avr-libc
-     ```
-5. Prepares the environment for compilation and upload
-
----
-
-## 🔹 Manual Setup (Step-by-step)
-
-### 🪟 Windows
-
-1. Install Python 3
-
-2. Install Python dependencies:
-
-   ```bash
-   pip install -r libs/requirements.txt
-   ```
-
-3. Extract toolchains:
-
-   * Extract `avr8-gnu-toolchain-...zip` into `tools/`
-   * Extract `avrdude-...zip` into `tools/`
-
-4. Locate folders:
-
-   * `tools/.../bin` (avr-gcc)
-   * `tools/.../bin` (avrdude)
-
-5. Add both paths to system PATH:
-
-   * Open Environment Variables
-   * Add paths manually
-
----
-
-### 🐧 Linux
-
-1. Update system:
-
-   ```bash
-   sudo apt-get update
-   ```
-
-2. Install AVR tools:
-
-   ```bash
-   sudo apt-get install avrdude gcc-avr avr-libc
-   ```
-
-3. Install Python dependencies:
-
-   ```bash
-   pip install -r libs/requirements.txt
-   ```
-
----
-
-# ▶️ PROGRAMMING
-
-## 🔹 Automatic (Recommended)
-
-Run:
-
-```bash
-python MAR_programmer.py
-```
-
-### This script automatically:
-
-1. Detects serial port (COM)
-2. Tests communication with ATTINY13A
-3. Sets fuse bits:
-
-   ```bash
-   avrdude -U lfuse:w:0x7A:m
-   ```
-4. Compiles firmware:
-
-   ```bash
-   avr-gcc -mmcu=attiny13 -Os -DF_CPU=9600000UL -o MAR.elf MAR.c
-   ```
-5. Generates HEX:
-
-   ```bash
-   avr-objcopy -O ihex MAR.elf MAR.hex
-   ```
-6. Uploads firmware:
-
-   ```bash
-   avrdude -c arduino -p t13 -P COMX -b 19200 -B 10 -U flash:w:MAR.hex
-   ```
-
----
-
-## 🔹 Manual Programming (Terminal)
-
-1. Configure fuse:
-
-```bash
-avrdude -c arduino -p t13 -P COMX -b 19200 -U lfuse:w:0x7A:m
-```
-
-2. Compile:
-
-```bash
-avr-gcc -mmcu=attiny13 -Os -DF_CPU=9600000UL -o MAR.elf MAR.c
-```
-
-3. Generate HEX:
-
-```bash
-avr-objcopy -O ihex MAR.elf MAR.hex
-```
-
-4. Upload:
-
-```bash
-avrdude -c arduino -p t13 -P COMX -b 19200 -B 10 -U flash:w:MAR.hex
-```
-
----
-
-## 🔌 Programming Hardware Setup
-
-For programming the ATTINY13A, it is **strongly recommended** to use an **EEPROM test clip (SOIC clip)**. This allows programming the microcontroller **directly on the board**, without the need for desoldering, making the process faster, safer, and more practical.
-
-In this project, an **Arduino Uno configured as ISP (In-System Programmer)** was used to perform the programming.
-
----
-
-### 📷 ATTINY13A Pinout
+## 🖼️ Schematic
 
 <p align="center">
-  <img src="../../images/attiny13a_pinout.png" width="400"> 
+
+  <!-- INSERT SCHEMATIC IMAGE HERE -->
+
+  <img src="images/schematic.png" width="500">
+
 </p>
 
 ---
 
-### 🔗 Wiring (Arduino ISP → ATTINY13A)
+## 📷 PCB
 
-The connection can be made using jumper wires as follows:
+<p align="center">
 
-```
-Arduino ____________ ATtiny13(A)
+  <!-- INSERT PCB PHOTO HERE -->
 
-5V      ----------------> Pin 8
-GND     ----------------> Pin 4
-Pin 13  ----------------> Pin 7
-Pin 12  ----------------> Pin 6
-Pin 11  ----------------> Pin 5
-Pin 10  ----------------> Pin 1
-```
+  <img src="images/pcb.png" width="500">
+
+</p>
 
 ---
 
-### ⚠️ Important Notes
+## 🔩 Bill of Materials (BOM)
 
-* Ensure the Arduino is loaded with the **ArduinoISP** sketch before use
-* Double-check all connections before powering the system
-* Poor contact (especially with clips) may cause programming failure
-* Designed for ATTINY13A
-* Requires ISP programmer (Arduino as ISP supported)
+| Reference | Value        | Description |
+
+|----------|-------------|------------|
+
+| R1       | 7.5 kΩ      | Pull-up resistor |
+
+| R2       | 100 Ω       | TSOP auxiliary resistor |
+
+| R3       | 220 Ω       | LED resistor |
+
+| R4       | 220 Ω       | LED resistor |
+
+| C1       | 100 nF      | Decoupling capacitor |
+
+| C2       | 4.7 µF      | TSOP auxiliary capacitor |
+
+| IC1      | ATTINY13A   | Microcontroller |
+
+| TSOP     | TSOP4838    | IR receiver module |
+
+| LEDB     | Blue LED    | Status indicator |
+
+| LEDR     | Red LED     | Status indicator |
+
+| Pinhead  | 3-pin male  | Power and signal connector |
 
 ---
 
+## ⚙️ Circuit Description
+
+### 🔹 TSOP4838
+
+Infrared receiver module responsible for detecting **modulated IR signals at 38 kHz**.  
+
+It includes internal filtering that rejects continuous light and environmental noise, ensuring reliable communication even in competitive environments.
+
 ---
+
+### 🔹 ATTINY13A (IC1)
+
+Microcontroller responsible for:
+
+- Decoding the IR signal received from the TSOP  
+
+- Interpreting the SIRC protocol  
+
+- Controlling system outputs and status LEDs  
+
+---
+
+### 🔹 C1 – Decoupling Capacitor (100 nF)
+
+Placed close to the microcontroller power pins.  
+
+Its function is to:
+
+- Filter high-frequency noise  
+
+- Stabilize the supply voltage  
+
+---
+
+### 🔹 R1 – Pull-up Resistor (7.5 kΩ)
+
+Connected to the RESET pin of the ATTINY13A.  
+
+Ensures:
+
+- Stable operation  
+
+- Prevents unintended resets  
+
+---
+
+### 🔹 R2 and C2 – TSOP Auxiliary Network
+
+These components follow the **datasheet recommendation** for the TSOP module.
+
+They help:
+
+- Improve noise immunity  
+
+- Stabilize signal reception  
+
+- Reduce false triggering  
+
+---
+
+### 🔹 R3 and R4 – LED Current Limiting
+
+Resistors used to protect the LEDs by limiting current.
+
+---
+
+### 🔹 LEDB (Blue) and LEDR (Red)
+
+Two programmable LEDs used for **visual feedback** of the system state:
+
+- 🔵 Blue LED → idle / standby / armed states  
+
+- 🔴 Red LED → activation / status indication  
+
+These LEDs are essential for:
+
+- Debugging  
+
+- Competition readiness feedback  
+
+---
+
+### 🔹 Pinhead (3-pin header)
+
+Provides connection for:
+
+- Power (VCC)  
+
+- Ground (GND)  
+
+- Signal / output  
+
+Designed for easy integration with robot systems.
+
+---
+
+## 🔌 Design Considerations
+
+- Compact layout for small robots  
+
+- Noise-resistant IR reception  
+
+- Minimal component count  
+
+- Easy soldering (0603 standard)  
+
+- Modular integration via pin header  
+
+---
+
+## 🚀 Integration
+
+The MAR hardware was designed to work seamlessly with the software tools:
+
+- **MAR_setup** → environment configuration  
+
+- **MAR_programmer** → firmware upload  
+
+This ensures a **fast and reliable deployment pipeline** from hardware to operation.
+
+---
+
 
 # MAR – Módulo de Ativação Remota [EN/PT]
 
@@ -283,148 +261,196 @@ Principais modificações:
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📐 Visão Geral da Placa
 
-```
-MAR/
-├── MAR_setup.py
-├── MAR_programmer.py
-├── MAR.c
-├── libs/
-├── tools/
-└── README.md
-```
+O hardware do MAR (Módulo de Ativação Remota) foi projetado para ser **compacto, leve e de fácil integração** em plataformas de robótica competitiva.
 
----
+**Dimensões da placa:**  
 
-## ⚙️ Requisitos
+📏 **X mm x Y mm** *(ajustar após versão final da PCB)*
 
-* Python 3
-* Windows ou Linux
+**Padrão de componentes:**  
+
+📦 SMD **0603**
 
 ---
 
-# 🚀 SETUP
-
-## 🔹 Setup Automático (Recomendado)
-
-```bash
-python MAR_setup.py
-```
-
-### O script realiza:
-
-1. Instala dependências Python
-2. Detecta o sistema operacional
-3. Windows:
-
-   * Extrai avr-gcc e avrdude
-   * Configura PATH
-4. Linux:
-
-   * Instala via apt-get
-5. Prepara ambiente completo
-
----
-
-## 🔹 Setup Manual (Passo a passo)
-
-### 🪟 Windows
-
-1. Instale Python
-2. Rode:
-
-```bash
-pip install -r libs/requirements.txt
-```
-
-3. Extraia os ZIPs para `tools/`
-4. Adicione ao PATH:
-
-   * pasta `bin` do avr-gcc
-   * pasta `bin` do avrdude
-
----
-
-### 🐧 Linux
-
-```bash
-sudo apt-get update
-sudo apt-get install avrdude gcc-avr avr-libc
-pip install -r libs/requirements.txt
-```
-
----
-
-# ▶️ PROGRAMAÇÃO
-
-## 🔹 Automática
-
-```bash
-python MAR_programmer.py
-```
-
-O script realiza automaticamente:
-
-* Detecção da COM
-* Teste de comunicação
-* Configuração de fuse
-* Compilação
-* Geração de HEX
-* Upload
-
----
-
-## 🔹 Manual (Terminal)
-
-```bash
-avrdude -c arduino -p t13 -P COMX -b 19200 -U lfuse:w:0x7A:m
-avr-gcc -mmcu=attiny13 -Os -DF_CPU=9600000UL -o MAR.elf MAR.c
-avr-objcopy -O ihex MAR.elf MAR.hex
-avrdude -c arduino -p t13 -P COMX -b 19200 -B 10 -U flash:w:MAR.hex
-```
-
----
-
-## 🔌 Configuração de Programação
-
-Para a programação do ATTINY13A, é **fortemente recomendado** o uso de uma **garra de programação de EEPROM (clip SOIC)**. Essa abordagem permite programar o microcontrolador **diretamente na placa**, sem a necessidade de dessoldagem, tornando o processo mais rápido, seguro e prático.
-
-Neste projeto, foi utilizado um **Arduino Uno configurado como ISP (In-System Programmer)** para realizar a gravação do firmware.
-
----
-
-### 📷 Pinagem do ATTINY13A
+## 🖼️ Esquemático
 
 <p align="center">
-  <img src="../../images/attiny13a_pinout.png" width="400">
+
+  <!-- INSERIR IMAGEM DO ESQUEMÁTICO -->
+
+  <img src="images/schematic.png" width="500">
+
 </p>
 
 ---
 
-### 🔗 Conexões (Arduino ISP → ATTINY13A)
+## 📷 Placa (PCB)
 
-A ligação pode ser feita com jumpers conforme abaixo:
+<p align="center">
 
-```
-Arduino ____________ ATtiny13(A)
+  <!-- INSERIR FOTO DA PLACA -->
 
-5V      ----------------> Pin 8
-GND     ----------------> Pin 4
-Pin 13  ----------------> Pin 7
-Pin 12  ----------------> Pin 6
-Pin 11  ----------------> Pin 5
-Pin 10  ----------------> Pin 1
-```
+  <img src="images/pcb.png" width="500">
+
+</p>
 
 ---
 
-### ⚠️ Observações Importantes
+## 🔩 Lista de Componentes (BOM)
 
-* Certifique-se de que o Arduino esteja rodando o código **ArduinoISP**
-* Verifique todas as conexões antes de energizar
-* Mau contato (principalmente na garra) pode impedir a gravação
-* Projeto para ATTINY13A
-* Necessário programador ISP
+| Referência | Valor        | Descrição |
+
+|-----------|-------------|----------|
+
+| R1        | 7.5 kΩ      | Resistor de pull-up |
+
+| R2        | 100 Ω       | Resistor auxiliar do TSOP |
+
+| R3        | 220 Ω       | Resistor para LED |
+
+| R4        | 220 Ω       | Resistor para LED |
+
+| C1        | 100 nF      | Capacitor de desacoplamento |
+
+| C2        | 4.7 µF      | Capacitor auxiliar do TSOP |
+
+| IC1       | ATTINY13A   | Microcontrolador |
+
+| TSOP      | TSOP4838    | Receptor infravermelho |
+
+| LEDB      | LED Azul    | Indicador de status |
+
+| LEDR      | LED Vermelho| Indicador de status |
+
+| Pinhead   | 3 pinos     | Conector de alimentação e sinal |
 
 ---
+
+## ⚙️ Descrição do Circuito
+
+### 🔹 TSOP4838
+
+Módulo receptor infravermelho responsável por detectar **sinais modulados na frequência de 38 kHz**.  
+
+Possui filtragem interna que rejeita:
+
+- Luz contínua  
+
+- Ruídos do ambiente  
+
+Garantindo uma comunicação confiável mesmo em ambientes com múltiplos robôs.
+
+---
+
+### 🔹 ATTINY13A (IC1)
+
+Microcontrolador responsável por:
+
+- Decodificar o sinal recebido do TSOP  
+
+- Interpretar o protocolo SIRC  
+
+- Controlar os LEDs e a lógica do sistema  
+
+---
+
+### 🔹 C1 – Capacitor de Desacoplamento (100 nF)
+
+Posicionado próximo aos pinos de alimentação do microcontrolador.  
+
+Funções:
+
+- Filtrar ruídos de alta frequência  
+
+- Estabilizar a tensão de alimentação  
+
+---
+
+### 🔹 R1 – Resistor de Pull-up (7.5 kΩ)
+
+Conectado ao pino de RESET do ATTINY13A.  
+
+Garante:
+
+- Funcionamento estável  
+
+- Evita resets indesejados  
+
+---
+
+### 🔹 R2 e C2 – Rede Auxiliar do TSOP
+
+Componentes recomendados pelo datasheet do TSOP.  
+
+Responsáveis por:
+
+- Melhorar a imunidade a ruídos  
+
+- Estabilizar o sinal recebido  
+
+- Reduzir leituras falsas  
+
+---
+
+### 🔹 R3 e R4 – Limitação de Corrente dos LEDs
+
+Resistores utilizados para limitar a corrente que passa pelos LEDs, garantindo sua proteção.
+
+---
+
+### 🔹 LEDB (Azul) e LEDR (Vermelho)
+
+LEDs programáveis utilizados para fornecer **feedback visual do estado do sistema**:
+
+- 🔵 LED Azul → estados de espera / armado  
+
+- 🔴 LED Vermelho → ativação / status  
+
+Essenciais para:
+
+- Debug  
+
+- Indicação rápida durante competições  
+
+---
+
+### 🔹 Pinhead (Conector de 3 pinos)
+
+Responsável pela conexão com o sistema externo:
+
+- VCC (alimentação)  
+
+- GND (terra)  
+
+- Sinal  
+
+Projetado para facilitar a integração com o robô.
+
+---
+
+## 🔌 Considerações de Projeto
+
+- Layout compacto para robôs de pequeno porte  
+
+- Recepção IR resistente a ruído  
+
+- Baixa quantidade de componentes  
+
+- Facilidade de soldagem (padrão 0603)  
+
+- Integração modular via conector  
+
+---
+
+## 🚀 Integração
+
+O hardware do MAR foi desenvolvido para funcionar em conjunto com as ferramentas de software:
+
+- **MAR_setup** → configuração do ambiente  
+
+- **MAR_programmer** → gravação do firmware  
+
+Isso garante um fluxo completo de uso, do hardware até a operação.
