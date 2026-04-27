@@ -11,6 +11,8 @@ This project is based on:
 
 The original work presents a low-cost remote activation system for sumo robots using infrared communication based on the SIRC protocol at 38 kHz. Its main motivation is to ensure reliable, standardized, and interference-resistant activation during competitions.
 
+**When referring to this project, please cite the paper above.**
+
 Based on this work, the present project introduces adaptations focused on **modularity, ease of use, and hardware simplification**, aiming to create a portable and easily replicable solution.
 
 Main adaptations:
@@ -256,6 +258,8 @@ Este projeto foi inspirado no artigo:
 > Disponível em: https://www.sba.org.br/open_journal_systems/index.php/sbai/article/view/5371
 
 O artigo apresenta um sistema de ativação remota baseado em infravermelho utilizando o protocolo SIRC em 38 kHz, com foco em confiabilidade e padronização em competições.
+
+**Ao se referir a este projeto, por favor, cite o artigo acima.**
 
 Este projeto adapta a solução com foco em:
 
