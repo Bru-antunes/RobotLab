@@ -50,7 +50,7 @@ The MAR (Remote Activation Module) hardware was designed to be **compact, lightw
 
 <p align="center">
 
-  <img src="../../images/MAR/schematic_MAR.png" width="1000">
+  <img src="../../docs/images/MAR/schematic_MAR.png" width="800">
 
 </p>
 
@@ -62,7 +62,7 @@ The MAR (Remote Activation Module) hardware was designed to be **compact, lightw
 
   <!-- INSERT PCB PHOTO HERE -->
 
-  <img src="../../images/MAR/pcb_MAR.png" width="1000">
+  <img src="../../docs/images/MAR/pcb_MAR.png" width="600">
 
 </p>
 
@@ -267,10 +267,8 @@ O hardware do MAR (Módulo de Ativação Remota) foi projetado para ser **compac
 
 <p align="center">
 
-  <!-- INSERIR IMAGEM DO ESQUEMÁTICO -->
-
-  <img src="images/schematic.png" width="500">
-
+  <img src="../../docs/images/MAR/schematic_MAR.png" width="800">
+  
 </p>
 
 ---
@@ -279,10 +277,8 @@ O hardware do MAR (Módulo de Ativação Remota) foi projetado para ser **compac
 
 <p align="center">
 
-  <!-- INSERIR FOTO DA PLACA -->
-
-  <img src="images/pcb.png" width="500">
-
+  <img src="../../docs/images/MAR/pcb_MAR.png" width="600">
+  
 </p>
 
 ---
