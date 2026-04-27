@@ -40,7 +40,6 @@ MAR/
 ├── MAR_programmer.py
 ├── MAR.c
 ├── libs/
-├── tools/
 └── README.md
 ```
 
