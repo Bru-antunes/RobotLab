@@ -302,30 +302,18 @@ O hardware do MAR (Módulo de Ativação Remota) foi projetado para ser **compac
 ## 🔩 Lista de Componentes (BOM)
 
 | Referência | Valor        | Descrição |
-
-|-----------|-------------|----------|
-
-| R1        | 7.5 kΩ      | Resistor de pull-up |
-
-| R2        | 100 Ω       | Resistor auxiliar do TSOP |
-
-| R3        | 220 Ω       | Resistor para LED |
-
-| R4        | 220 Ω       | Resistor para LED |
-
-| C1        | 100 nF      | Capacitor de desacoplamento |
-
-| C2        | 4.7 µF      | Capacitor auxiliar do TSOP |
-
-| IC1       | ATTINY13A   | Microcontrolador |
-
-| TSOP      | TSOP4838    | Receptor infravermelho |
-
-| LEDB      | LED Azul    | Indicador de status |
-
-| LEDR      | LED Vermelho| Indicador de status |
-
-| Pinhead   | 3 pinos     | Conector de alimentação e sinal |
+|------------|-------------|----------|
+| R1         | 7.5 kΩ      | Resistor de pull-up |
+| R2         | 100 Ω       | Resistor auxiliar do TSOP |
+| R3         | 220 Ω       | Resistor para LED |
+| R4         | 220 Ω       | Resistor para LED |
+| C1         | 100 nF      | Capacitor de desacoplamento |
+| C2         | 4.7 µF      | Capacitor auxiliar do TSOP |
+| IC1        | ATTINY13A   | Microcontrolador |
+| TSOP       | TSOP4838    | Receptor infravermelho |
+| LEDB       | LED Azul    | Indicador de status |
+| LEDR       | LED Vermelho| Indicador de status |
+| Pinhead    | 3 pinos     | Conector de alimentação e sinal |
 
 ---
 
