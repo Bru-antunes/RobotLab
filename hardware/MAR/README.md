@@ -72,31 +72,21 @@ The MAR (Remote Activation Module) hardware was designed to be **compact, lightw
 
 ## 🔩 Bill of Materials (BOM)
 
-| Reference | Value        | Description |
 
-|----------|-------------|------------|
+| Reference | Value       | Description |
+|-----------|------------|------------|
+| R1        | 7.5 kΩ     | Pull-up resistor |
+| R2        | 100 Ω      | TSOP auxiliary resistor |
+| R3        | 220 Ω      | LED resistor |
+| R4        | 220 Ω      | LED resistor |
+| C1        | 100 nF     | Decoupling capacitor |
+| C2        | 4.7 µF     | TSOP auxiliary capacitor |
+| IC1       | ATTINY13A  | Microcontroller |
+| TSOP      | TSOP4838   | Infrared receiver |
+| LEDB      | Blue LED   | Status indicator |
+| LEDR      | Red LED    | Status indicator |
+| Pinhead   | 3 pins     | Power and signal connector |
 
-| R1       | 7.5 kΩ      | Pull-up resistor |
-
-| R2       | 100 Ω       | TSOP auxiliary resistor |
-
-| R3       | 220 Ω       | LED resistor |
-
-| R4       | 220 Ω       | LED resistor |
-
-| C1       | 100 nF      | Decoupling capacitor |
-
-| C2       | 4.7 µF      | TSOP auxiliary capacitor |
-
-| IC1      | ATTINY13A   | Microcontroller |
-
-| TSOP     | TSOP4838    | IR receiver module |
-
-| LEDB     | Blue LED    | Status indicator |
-
-| LEDR     | Red LED     | Status indicator |
-
-| Pinhead  | 3-pin male  | Power and signal connector |
 
 ---
 
