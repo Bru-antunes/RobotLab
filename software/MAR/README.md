@@ -317,9 +317,9 @@ Replace `COMX` with your serial port:
 
   <br><br>
 
+<a name="pt"> </a>
 
 # MAR – Módulo de Ativação Remota [PT]
-<a name="pt"> </a>
 
 ---
 
