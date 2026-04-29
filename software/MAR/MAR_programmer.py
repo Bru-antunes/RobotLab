@@ -8,7 +8,7 @@ import time
 # CONFIG
 # =========================
 
-ARDUINO_ISP_HEX = os.path.join("libs", "ArduinoISP.hex")
+ARDUINO_ISP_HEX = os.path.join("libs", "ArduinoISP.ino.hex")
 
 # =========================
 # Helper functions / Funções auxiliares
