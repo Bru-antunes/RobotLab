@@ -1,4 +1,5 @@
-# MAR – Remote Activation Module [EN/PT]
+# MAR – Remote Activation Module [EN]
+Para a versão em Português, [clique aqui](#pt)
 
 ---
 
@@ -30,8 +31,8 @@ Main adaptations:
 ## 🔗 Project Links
 
 - 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
-- 🔩 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
-
+- 🔧 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
+- 📚 Documentation: [RobotLab/docs/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)
 ---
 
 ## 📁 Project Structure
@@ -70,7 +71,7 @@ python MAR_setup.py
 2. Detects operating system
 3. On Windows:
 
-   * Extracts `avr-gcc` and `avrdude` from `libs/`
+   * Installs `avr-gcc` and `avrdude`
    * Places them inside `tools/`
    * Configures PATH dynamically
 4. On Linux:
@@ -244,190 +245,43 @@ Pin 10  ----------------> Pin 1
 
 ---
 
----
 
-# MAR – Módulo de Ativação Remota [EN/PT]
+# MAR – Módulo de Ativação Remota [PT]
+<a name="pt"> </a>
 
 ---
 
 ## 📚 Referência, Motivação e Adaptação
 
-Este projeto foi inspirado no artigo:
+Este projeto é baseado em:
 
-> **Antunes et al. (2025)** – *Development of a Low-Cost Remote Activation System for Competitive Sumo Robots*
+> **Antunes et al. (2025)** – *Desenvolvimento de um Sistema de Ativação Remota de Baixo Custo para Robôs de Sumô Competitivos*  
 > Disponível em: https://www.sba.org.br/open_journal_systems/index.php/sbai/article/view/5371
 
-O artigo apresenta um sistema de ativação remota baseado em infravermelho utilizando o protocolo SIRC em 38 kHz, com foco em confiabilidade e padronização em competições.
+O trabalho original apresenta um sistema de ativação remota de baixo custo para robôs de sumô utilizando comunicação infravermelha baseada no protocolo SIRC a 38 kHz. Sua principal motivação é garantir uma ativação confiável, padronizada e resistente a interferências durante competições.
 
-**Ao se referir a este projeto, por favor, cite o artigo acima.**
+**Ao se referir a este projeto, por favor cite o artigo acima.**
 
-Este projeto adapta a solução com foco em:
+Com base nesse trabalho, o presente projeto introduz adaptações focadas em **modularidade, facilidade de uso e simplificação de hardware**, visando criar uma solução portátil e facilmente replicável.
 
-* Modularização
-* Redução de custo
-* Facilidade de integração
-* Miniaturização (ATTINY13A)
+Principais adaptações:
 
-Principais modificações:
-
-* Reescrita do firmware
-* Alteração de registradores
-* Reconfiguração de timers
-* Tratamento de interrupções
-* Filtragem de ruído por tempo
-* Automação completa via scripts
+* Design de hardware modular  
+* Migração para ATTINY13A (redução de tamanho e custo)  
+* Firmware reescrito a partir do ATMEGA328P  
+* Reconfiguração de timers e interrupções  
+* Processamento apenas de borda de descida  
+* Filtragem de ruído via restrições de tempo  
+* Automação completa via scripts  
 
 ---
 
 ## 🔗 Links do Projeto
 
 - 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
-- 🔩 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
+- 🔧 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)  
+- 📚 Documentação: [RobotLab/docs/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)
 
 ---
 
-## 📁 Estrutura do Projeto
 
-```
-MAR/
-├── MAR_setup.py
-├── MAR_programmer.py
-├── MAR.c
-├── libs/
-├── tools/
-└── README.md
-```
-
----
-
-## ⚙️ Requisitos
-
-* Python 3
-* Windows ou Linux
-
----
-
-# 🚀 SETUP
-
-## 🔹 Setup Automático (Recomendado)
-
-```bash
-python MAR_setup.py
-```
-
-### O script realiza:
-
-1. Instala dependências Python
-2. Detecta o sistema operacional
-3. Windows:
-
-   * Extrai avr-gcc e avrdude
-   * Configura PATH
-4. Linux:
-
-   * Instala via apt-get
-5. Prepara ambiente completo
-
----
-
-## 🔹 Setup Manual (Passo a passo)
-
-### 🪟 Windows
-
-1. Instale Python
-2. Rode:
-
-```bash
-pip install -r libs/requirements.txt
-```
-
-3. Extraia os ZIPs para `tools/`
-4. Adicione ao PATH:
-
-   * pasta `bin` do avr-gcc
-   * pasta `bin` do avrdude
-
----
-
-### 🐧 Linux
-
-```bash
-sudo apt-get update
-sudo apt-get install avrdude gcc-avr avr-libc
-pip install -r libs/requirements.txt
-```
-
----
-
-# ▶️ PROGRAMAÇÃO
-
-## 🔹 Automática
-
-```bash
-python MAR_programmer.py
-```
-
-O script realiza automaticamente:
-
-* Detecção da COM
-* Teste de comunicação
-* Configuração de fuse
-* Compilação
-* Geração de HEX
-* Upload
-
----
-
-## 🔹 Manual (Terminal)
-
-```bash
-avrdude -c arduino -p t13 -P COMX -b 19200 -U lfuse:w:0x7A:m
-avr-gcc -mmcu=attiny13 -Os -DF_CPU=9600000UL -o MAR.elf MAR.c
-avr-objcopy -O ihex MAR.elf MAR.hex
-avrdude -c arduino -p t13 -P COMX -b 19200 -B 10 -U flash:w:MAR.hex
-```
-
----
-
-## 🔌 Configuração de Programação
-
-Para a programação do ATTINY13A, é **fortemente recomendado** o uso de uma **garra de programação de EEPROM (clip SOIC)**. Essa abordagem permite programar o microcontrolador **diretamente na placa**, sem a necessidade de dessoldagem, tornando o processo mais rápido, seguro e prático.
-
-Neste projeto, foi utilizado um **Arduino Uno configurado como ISP (In-System Programmer)** para realizar a gravação do firmware.
-
----
-
-### 📷 Pinagem do ATTINY13A
-
-<p align="center">
-  <img src="../../docs/images/MAR/attiny13a_pinout.png" width="400">
-</p>
-
----
-
-### 🔗 Conexões (Arduino ISP → ATTINY13A)
-
-A ligação pode ser feita com jumpers conforme abaixo:
-
-```
-Arduino ____________ ATtiny13(A)
-
-5V      ----------------> Pin 8
-GND     ----------------> Pin 4
-Pin 13  ----------------> Pin 7
-Pin 12  ----------------> Pin 6
-Pin 11  ----------------> Pin 5
-Pin 10  ----------------> Pin 1
-```
-
----
-
-### ⚠️ Observações Importantes
-
-* Certifique-se de que o Arduino esteja rodando o código **ArduinoISP**
-* Verifique todas as conexões antes de energizar
-* Mau contato (principalmente na garra) pode impedir a gravação
-* Projeto para ATTINY13A
-* Necessário programador ISP
-
----
