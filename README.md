@@ -65,9 +65,9 @@ Creators
 
 
 ### MAR — Remote Activation Module
-- 💻 **Software:** ✅ Available  
-- 🔧 **Hardware:** ✅ Available 
-- 📚 **Documentation:** ✅ Available
+- 💻 **Software:** [✅ Available ](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)
+- 🔧 **Hardware:** [✅ Available ](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
+- 📚 **Documentation:** [✅ Available ](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)
 
 A remote activation system designed to control and initialize electronic devices, especially in autonomous robots. The module ensures reliable, faster and safe triggering.
 
@@ -160,9 +160,10 @@ Criadores
 <a name="projetos"> </a>
 
 ### MAR — Módulo de Ativação Remota
-- 💻 **Software:** ✅ Disponível  
-- 🔧 **Hardware:** ✅ Disponível 
-- 📚 **Documentação:** ✅ Disponível
+- 💻 **Software:** [✅ Disponível ](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)
+- 🔧 **Hardware:** [✅ Disponível ](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
+- 📚 **Documentação:** [✅ Disponível ](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)
+
 
 Um sistema de ativação remota projetado para controlar e inicializar dispositivos eletrônicos, especialmente em robôs autônomos. O módulo garante acionamento confiável, mais rápido e seguro.
 
