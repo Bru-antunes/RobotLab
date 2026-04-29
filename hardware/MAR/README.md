@@ -1,4 +1,5 @@
-# MAR – Remote Activation Module [EN/PT]
+# MAR – Remote Activation Module [EN]
+Para a versão em Português, [clique aqui](#pt)
 
 ---
 
@@ -30,7 +31,8 @@ Main adaptations:
 ## 🔗 Project Links
 
 - 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
-- 🔩 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
+- 🔧 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
+- 📚 Documentation: [RobotLab/docs/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)
 
 ---
 
@@ -40,7 +42,7 @@ The MAR (Remote Activation Module) hardware was designed to be **compact, lightw
 
 **Board dimensions:**  
 
-📏 **X mm x Y mm** *(adjust after final PCB)*
+📏 **15 mm x 14 mm** 
 
 **Component size standard:**  
 
@@ -160,9 +162,9 @@ Resistors used to protect the LEDs by limiting current.
 
 Two programmable LEDs used for **visual feedback** of the system state:
 
-- 🔵 Blue LED → idle / standby / armed states  
+- 🔵 Blue LED → activation / status indication   
 
-- 🔴 Red LED → activation / status indication  
+- 🔴 Red LED → idle / standby / armed states 
 
 These LEDs are essential for:
 
@@ -212,44 +214,41 @@ This ensures a **fast and reliable deployment pipeline** from hardware to operat
 
 ---
 
-
-# MAR – Módulo de Ativação Remota [EN/PT]
+# MAR – Módulo de Ativação Remota [PT]
+<a name="pt"> </a>
 
 ---
 
 ## 📚 Referência, Motivação e Adaptação
 
-Este projeto foi inspirado no artigo:
+Este projeto é baseado em:
 
-> **Antunes et al. (2025)** – *Development of a Low-Cost Remote Activation System for Competitive Sumo Robots*
+> **Antunes et al. (2025)** – *Desenvolvimento de um Sistema de Ativação Remota de Baixo Custo para Robôs de Sumô Competitivos*  
 > Disponível em: https://www.sba.org.br/open_journal_systems/index.php/sbai/article/view/5371
 
-O artigo apresenta um sistema de ativação remota baseado em infravermelho utilizando o protocolo SIRC em 38 kHz, com foco em confiabilidade e padronização em competições.
+O trabalho original apresenta um sistema de ativação remota de baixo custo para robôs de sumô utilizando comunicação infravermelha baseada no protocolo SIRC a 38 kHz. Sua principal motivação é garantir uma ativação confiável, padronizada e resistente a interferências durante competições.
 
-**Ao se referir a este projeto, por favor, cite o artigo acima.**
+**Ao se referir a este projeto, por favor cite o artigo acima.**
 
-Este projeto adapta a solução com foco em:
+Com base nesse trabalho, o presente projeto introduz adaptações focadas em **modularidade, facilidade de uso e simplificação de hardware**, com o objetivo de criar uma solução portátil e facilmente replicável.
 
-* Modularização
-* Redução de custo
-* Facilidade de integração
-* Miniaturização (ATTINY13A)
+Principais adaptações:
 
-Principais modificações:
-
-* Reescrita do firmware
-* Alteração de registradores
-* Reconfiguração de timers
-* Tratamento de interrupções
-* Filtragem de ruído por tempo
-* Automação completa via scripts
+* Design de hardware modular  
+* Migração para ATTINY13A (redução de tamanho e custo)  
+* Firmware reescrito a partir do ATMEGA328P  
+* Reconfiguração de timers e interrupções  
+* Processamento apenas de borda de descida  
+* Filtragem de ruído via restrições de tempo  
+* Automação completa via scripts  
 
 ---
 
 ## 🔗 Links do Projeto
 
 - 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
-- 🔩 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
+- 🔧 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)  
+- 📚 Documentação: [RobotLab/docs/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)  
 
 ---
 
@@ -259,7 +258,7 @@ O hardware do MAR (Módulo de Ativação Remota) foi projetado para ser **compac
 
 **Dimensões da placa:**  
 
-📏 **X mm x Y mm** *(ajustar após versão final da PCB)*
+📏 **15 mm x 14 mm** 
 
 **Padrão de componentes:**  
 
@@ -272,36 +271,38 @@ O hardware do MAR (Módulo de Ativação Remota) foi projetado para ser **compac
 <p align="center">
 
   <img src="../../docs/images/MAR/schematic_MAR.png" width="800">
-  
+
 </p>
 
 ---
 
-## 📷 Placa (PCB)
+## 📷 PCB
 
 <p align="center">
 
+  <!-- INSERIR FOTO DO PCB AQUI -->
+
   <img src="../../docs/images/MAR/pcb_MAR.png" width="600">
-  
+
 </p>
 
 ---
 
-## 🔩 Lista de Componentes (BOM)
+## 🔩 Lista de Materiais (BOM)
 
-| Referência | Valor        | Descrição |
-|------------|-------------|----------|
-| R1         | 7.5 kΩ      | Resistor de pull-up |
-| R2         | 100 Ω       | Resistor auxiliar do TSOP |
-| R3         | 220 Ω       | Resistor para LED |
-| R4         | 220 Ω       | Resistor para LED |
-| C1         | 100 nF      | Capacitor de desacoplamento |
-| C2         | 4.7 µF      | Capacitor auxiliar do TSOP |
-| IC1        | ATTINY13A   | Microcontrolador |
-| TSOP       | TSOP4838    | Receptor infravermelho |
-| LEDB       | LED Azul    | Indicador de status |
-| LEDR       | LED Vermelho| Indicador de status |
-| Pinhead    | 3 pinos     | Conector de alimentação e sinal |
+| Referência | Valor       | Descrição |
+|-----------|------------|------------|
+| R1        | 7,5 kΩ     | Resistor de pull-up |
+| R2        | 100 Ω      | Resistor auxiliar do TSOP |
+| R3        | 220 Ω      | Resistor do LED |
+| R4        | 220 Ω      | Resistor do LED |
+| C1        | 100 nF     | Capacitor de desacoplamento |
+| C2        | 4,7 µF     | Capacitor auxiliar do TSOP |
+| IC1       | ATTINY13A  | Microcontrolador |
+| TSOP      | TSOP4838   | Receptor infravermelho |
+| LEDB      | LED azul   | Indicador de status |
+| LEDR      | LED vermelho | Indicador de status |
+| Pinhead   | 3 pinos    | Conector de alimentação e sinal |
 
 ---
 
@@ -309,15 +310,9 @@ O hardware do MAR (Módulo de Ativação Remota) foi projetado para ser **compac
 
 ### 🔹 TSOP4838
 
-Módulo receptor infravermelho responsável por detectar **sinais modulados na frequência de 38 kHz**.  
+Módulo receptor infravermelho responsável por detectar **sinais IR modulados a 38 kHz**.
 
-Possui filtragem interna que rejeita:
-
-- Luz contínua  
-
-- Ruídos do ambiente  
-
-Garantindo uma comunicação confiável mesmo em ambientes com múltiplos robôs.
+Ele inclui filtragem interna que rejeita luz contínua e ruídos ambientais, garantindo comunicação confiável mesmo em ambientes competitivos.
 
 ---
 
@@ -325,108 +320,93 @@ Garantindo uma comunicação confiável mesmo em ambientes com múltiplos robôs
 
 Microcontrolador responsável por:
 
-- Decodificar o sinal recebido do TSOP  
-
+- Decodificar o sinal infravermelho recebido pelo TSOP  
 - Interpretar o protocolo SIRC  
-
-- Controlar os LEDs e a lógica do sistema  
+- Controlar as saídas do sistema e os LEDs de status  
 
 ---
 
 ### 🔹 C1 – Capacitor de Desacoplamento (100 nF)
 
-Posicionado próximo aos pinos de alimentação do microcontrolador.  
+Posicionado próximo aos pinos de alimentação do microcontrolador.
 
-Funções:
+Sua função é:
 
 - Filtrar ruídos de alta frequência  
-
 - Estabilizar a tensão de alimentação  
 
 ---
 
-### 🔹 R1 – Resistor de Pull-up (7.5 kΩ)
+### 🔹 R1 – Resistor de Pull-up (7,5 kΩ)
 
-Conectado ao pino de RESET do ATTINY13A.  
+Conectado ao pino RESET do ATTINY13A.
 
 Garante:
 
-- Funcionamento estável  
-
-- Evita resets indesejados  
+- Operação estável do microcontrolador  
+- Prevenção de resets indesejados  
 
 ---
 
 ### 🔹 R2 e C2 – Rede Auxiliar do TSOP
 
-Componentes recomendados pelo datasheet do TSOP.  
+Esses componentes seguem a **recomendação do datasheet** do módulo TSOP.
 
-Responsáveis por:
+Eles ajudam a:
 
-- Melhorar a imunidade a ruídos  
-
-- Estabilizar o sinal recebido  
-
-- Reduzir leituras falsas  
+- Melhorar imunidade a ruídos  
+- Estabilizar a recepção do sinal  
+- Reduzir falsos disparos  
 
 ---
 
 ### 🔹 R3 e R4 – Limitação de Corrente dos LEDs
 
-Resistores utilizados para limitar a corrente que passa pelos LEDs, garantindo sua proteção.
+Resistores utilizados para proteger os LEDs, limitando a corrente elétrica.
 
 ---
 
 ### 🔹 LEDB (Azul) e LEDR (Vermelho)
 
-LEDs programáveis utilizados para fornecer **feedback visual do estado do sistema**:
+Dois LEDs programáveis usados para **feedback visual do estado do sistema**:
 
-- 🔵 LED Azul → estados de espera / armado  
+- 🔵 LED azul → ativação / indicação de estado 
+- 🔴 LED vermelho → estado ocioso / standby / pronto 
 
-- 🔴 LED Vermelho → ativação / status  
+Esses LEDs são essenciais para:
 
-Essenciais para:
-
-- Debug  
-
-- Indicação rápida durante competições  
+- Depuração  
+- Feedback durante competições  
 
 ---
 
-### 🔹 Pinhead (Conector de 3 pinos)
+### 🔹 Pinhead (conector de 3 pinos)
 
-Responsável pela conexão com o sistema externo:
+Permite conexão de:
 
-- VCC (alimentação)  
+- Alimentação (VCC)  
+- Terra (GND)  
+- Sinal / saída  
 
-- GND (terra)  
-
-- Sinal  
-
-Projetado para facilitar a integração com o robô.
+Projetado para facilitar integração com sistemas robóticos.
 
 ---
 
 ## 🔌 Considerações de Projeto
 
-- Layout compacto para robôs de pequeno porte  
-
+- Layout compacto para robôs pequenos  
 - Recepção IR resistente a ruído  
-
-- Baixa quantidade de componentes  
-
+- Baixo número de componentes  
 - Facilidade de soldagem (padrão 0603)  
-
 - Integração modular via conector  
 
 ---
 
 ## 🚀 Integração
 
-O hardware do MAR foi desenvolvido para funcionar em conjunto com as ferramentas de software:
+O hardware MAR foi projetado para funcionar perfeitamente com as ferramentas de software:
 
 - **MAR_setup** → configuração do ambiente  
+- **MAR_programmer** → gravação de firmware  
 
-- **MAR_programmer** → gravação do firmware  
-
-Isso garante um fluxo completo de uso, do hardware até a operação.
+Isso garante um pipeline de implantação **rápido e confiável**, do hardware à operação.
