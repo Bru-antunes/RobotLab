@@ -39,6 +39,25 @@ def safe_run(cmd):
         return ""
 
 # =========================
+# PYTHON DEPENDENCY CHECK
+# =========================
+
+def ensure_pyserial():
+    try:
+        import serial
+        version = getattr(serial, "__version__", None)
+        if version == "3.5":
+            print("pyserial 3.5 already installed")
+            return
+        else:
+            print(f"pyserial version found: {version}, enforcing 3.5")
+    except ImportError:
+        print("pyserial not found")
+
+    subprocess.run([sys.executable, "-m", "pip", "install", "pyserial==3.5"])
+    print("pyserial==3.5 installed")
+
+# =========================
 # TOOL DETECTION
 # =========================
 
@@ -93,7 +112,6 @@ def install_windows_tools():
 
 def add_to_path_windows(new_path):
     try:
-        import subprocess
         current = os.environ.get("PATH", "")
         if new_path not in current:
             subprocess.run(f'setx PATH "%PATH%;{new_path}"', shell=True)
@@ -213,16 +231,19 @@ def write_vscode_config():
     with open(VSCODE_CONFIG, "w") as f:
         json.dump(config, f, indent=4)
 
-
 # =========================
 # MAIN
 # =========================
 
 def main():
     print("=== AVR AUTO SETUP ===")
+
+    ensure_pyserial()
     ensure_tools()
+
     generate_compile_commands()
     write_vscode_config()
+
     print("DONE ✔")
 
 
