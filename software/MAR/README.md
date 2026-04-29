@@ -80,7 +80,7 @@ python MAR_setup.py
 
      ```bash
      sudo apt-get update
-     sudo apt-get install avrdude gcc-avr avr-libc
+     sudo apt-get install avrdude gcc-avr
      ```
 5. Prepares the environment for compilation and upload
 
@@ -126,7 +126,7 @@ python MAR_setup.py
 2. Install AVR tools:
 
    ```bash
-   sudo apt-get install avrdude gcc-avr avr-libc
+   sudo apt-get install avrdude gcc-avr 
    ```
 
 3. Install Python dependencies:
