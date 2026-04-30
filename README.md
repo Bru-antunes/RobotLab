@@ -23,12 +23,15 @@ For the English version, [click here](#welcomeen)
 
 - [🤖 Welcome! [EN]](#welcomeen)
 - [📦 Projects](#projects)
+- [📘 Articles](#articles)
 - [📜 License](#license)
+
 
 Para a versão em Português, [clique aqui](#welcomept)
 
 - [🤖 Bem-vindo! [PT]](#welcomept)
 - [📦 Projetos](#projetos)
+- [📘 Artigos](#artigos)
 - [📜 Licença](#licenca)
 
 <br>
@@ -114,6 +117,29 @@ An embedded board based on the ESP32-S3, designed to integrate processing, commu
 A modular platform based on the Arduino Nano. It allows easy integration with sensors and actuators, making it ideal for simple plug-and-play electronics.
 
 ---
+
+
+## 📘 Articles
+
+<a name="articles"> </a>
+
+### [Development of an Autonomous Robot for Competitive and Educational Purposes in the Sumo Category](https://doi.org/10.1109/SBR/WRE63066.2024.10837592)
+
+**Abstract:** This article explores the design, construction, and performance of a robot designed to compete in the Mini Autonomous Sumo category. In this challenge, autonomous robots weighing up to 500 grams battle in a circular arena, being programmed to detect and push the opponent out of the combat area without human intervention. The nature of this competition requires the integration of various fields of knowledge, from the selection of components to the development of codes. By highlighting the challenges faced, the solutions adopted and the lessons learned, the article seeks to provide innovation in the area of competitive, educational, and interdisciplinary robotics.
+
+---
+
+### [Magnetic Modular Robotics: An Educational Approach to Robot Competitions](https://doi.org/10.1109/SBR/WRE66973.2025.11249529)
+
+**Abstract:** This research presents the design and implemen-tation of a modular robotic platform for educational purposes, based on the mini sumo competition modality. The developed robot consists of magnetically connectable modules that sim-plify both mechanical and electrical integration, eliminating the need for exposed wiring and reducing setup complexity. The platform is based on an Arduino Nano microcontroller, supporting infrared and ultrasonic sensors. It features a modular structure with magnetic alignment and Schottky-based Graetz bridge protection, which helps prevent damage caused by po-larity reversal. The created platform demonstrates modularity, robustness during reconfiguration, and effective operation in sumo competition environments. The proposed solution enhances STEM engagement by enabling rapid prototyping, sensor exper-imentation, and iterative control strategies in hands-on learning settings.
+
+---
+### [Development of a Low-Cost Remote Activation System for Competitive Sumo Robots](https://www.sba.org.br/open_journal_systems/index.php/sbai/article/view/5371)
+
+**Abstract:** This paper presents the development of a low-cost activation system for competitive sumo robots, designed to ensure compliance with competition regulations while optimizing response time and reliability. The system is based on an ATmega328P microcontroller, which processes signals from a TSOP 4840 infrared sensor to detect and decode commands transmitted via Sony Infrared Remote Control (SIRC) protocol. The system minimizes activation delays by using interrupt-driven processing and direct hardware control, ensuring a precise and synchronized match start. The proposed solution provides a cost-effective and customizable alternative to commercial activation modules, eliminating the need for expensive imports. This work supports open-source development, allowing robotics teams to adapt, modify, and improve the system according to their specific needs. The experimental validation demonstrated that the developed system exhibits robust and efficient performance comparable to commercial solutions.
+
+---
+
 
 ## 📜 License
 
@@ -210,6 +236,30 @@ Uma placa embarcada baseada no ESP32-S3, projetada para integrar processamento, 
 Uma plataforma modular baseada no Arduino Nano. Permite fácil integração com sensores e atuadores, sendo ideal para eletrônica simples no estilo plug-and-play.
 
 ---
+
+## 📘 Artigos
+
+<a name="artigos"> </a>
+
+### [Desenvolvimento de um Robô Autônomo para Fins Competitivos e Educacionais na Categoria Sumô](https://doi.org/10.1109/SBR/WRE63066.2024.10837592)
+
+**Resumo:** Este artigo explora o projeto, a construção e o desempenho de um robô desenvolvido para competir na categoria Mini Sumô Autônomo. Nesse desafio, robôs autônomos com peso de até 500 gramas batalham em uma arena circular, sendo programados para detectar e empurrar o oponente para fora da área de combate sem intervenção humana. A natureza dessa competição exige a integração de diversas áreas do conhecimento, desde a seleção de componentes até o desenvolvimento de códigos. Ao destacar os desafios enfrentados, as soluções adotadas e as lições aprendidas, o artigo busca promover inovação na área de robótica competitiva, educacional e interdisciplinar.
+
+---
+
+### [Robótica Modular Magnética: Uma Abordagem Educacional para Competições de Robôs](https://doi.org/10.1109/SBR/WRE66973.2025.11249529)
+
+**Resumo:** Esta pesquisa apresenta o projeto e a implementação de uma plataforma robótica modular para fins educacionais, baseada na modalidade de competição mini sumô. O robô desenvolvido é composto por módulos conectáveis magneticamente, que simplificam tanto a integração mecânica quanto elétrica, eliminando a necessidade de fiação exposta e reduzindo a complexidade de montagem. A plataforma é baseada em um microcontrolador Arduino Nano, com suporte a sensores infravermelhos e ultrassônicos. Possui uma estrutura modular com alinhamento magnético e proteção baseada em ponte de Graetz com diodos Schottky, o que ajuda a prevenir danos causados por inversão de polaridade. A plataforma criada demonstra modularidade, robustez durante reconfigurações e operação eficiente em ambientes de competição de sumô. A solução proposta amplia o engajamento em STEM ao possibilitar prototipagem rápida, experimentação com sensores e estratégias iterativas de controle em ambientes de aprendizado prático.
+
+---
+
+### [Desenvolvimento de um Sistema de Ativação Remota de Baixo Custo para Robôs de Sumô Competitivos](https://www.sba.org.br/open_journal_systems/index.php/sbai/article/view/5371)
+
+**Resumo:** Este artigo apresenta o desenvolvimento de um sistema de ativação de baixo custo para robôs de sumô competitivos, projetado para garantir conformidade com os regulamentos das competições, ao mesmo tempo em que otimiza o tempo de resposta e a confiabilidade. O sistema é baseado em um microcontrolador ATmega328P, que processa sinais de um sensor infravermelho TSOP 4840 para detectar e decodificar comandos transmitidos por meio do protocolo Sony Infrared Remote Control (SIRC). O sistema minimiza atrasos na ativação ao utilizar processamento baseado em interrupções e controle direto de hardware, garantindo um início de partida preciso e sincronizado. A solução proposta oferece uma alternativa econômica e personalizável aos módulos comerciais de ativação, eliminando a necessidade de importações caras. Este trabalho apoia o desenvolvimento open-source, permitindo que equipes de robótica adaptem, modifiquem e aprimorem o sistema de acordo com suas necessidades específicas. A validação experimental demonstrou que o sistema desenvolvido apresenta desempenho robusto e eficiente, comparável às soluções comerciais.
+
+---
+
+
 
 ## 📜 Licença
 
