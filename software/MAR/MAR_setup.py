@@ -7,6 +7,8 @@ import platform
 import urllib.request
 import zipfile
 from pathlib import Path
+import winreg
+
 
 # =========================
 # URLs
@@ -84,6 +86,33 @@ def extract_zip(zip_path, dest):
         z.extractall(dest)
     print("Extract complete")
 
+def flatten_avr_toolchain():
+    for item in os.listdir(INSTALL_AVR_DIR):
+        full_path = os.path.join(INSTALL_AVR_DIR, item)
+
+        # procura a pasta do toolchain
+        if os.path.isdir(full_path) and "avr8-gnu-toolchain" in item:
+            print(f"Flattening toolchain: {full_path}")
+
+            # move tudo de dentro dela para C:\avr
+            for sub in os.listdir(full_path):
+                src = os.path.join(full_path, sub)
+                dst = os.path.join(INSTALL_AVR_DIR, sub)
+
+                # se já existir, remove antes (evita erro)
+                if os.path.exists(dst):
+                    if os.path.isdir(dst):
+                        shutil.rmtree(dst)
+                    else:
+                        os.remove(dst)
+
+                shutil.move(src, dst)
+
+            # remove pasta vazia
+            shutil.rmtree(full_path)
+            print("Flatten complete")
+            return
+
 # =========================
 # WINDOWS INSTALL
 # =========================
@@ -98,6 +127,7 @@ def install_windows_tools():
     if not has_avr_gcc():
         download_zip(AVR_GCC_URL, avr_zip)
         extract_zip(avr_zip, INSTALL_AVR_DIR)
+        flatten_avr_toolchain()
 
     if not has_avrdude():
         download_zip(AVRDUDE_URL, avrdude_zip)
@@ -112,12 +142,55 @@ def install_windows_tools():
 
 def add_to_path_windows(new_path):
     try:
-        current = os.environ.get("PATH", "")
-        if new_path not in current:
-            subprocess.run(f'setx PATH "%PATH%;{new_path}"', shell=True)
-            print(f"Added to PATH: {new_path}")
+        reg_path = r"Environment"
+
+        with winreg.OpenKey(
+            winreg.HKEY_CURRENT_USER,
+            reg_path,
+            0,
+            winreg.KEY_READ
+        ) as key:
+            current, _ = winreg.QueryValueEx(key, "Path")
+
+        if new_path.lower() in current.lower():
+            print("Path already contains:", new_path)
+            return
+
+        new_value = current + ";" + new_path
+
+        with winreg.OpenKey(
+            winreg.HKEY_CURRENT_USER,
+            reg_path,
+            0,
+            winreg.KEY_SET_VALUE
+        ) as key:
+            winreg.SetValueEx(key, "Path", 0, winreg.REG_EXPAND_SZ, new_value)
+
+        print(f"Added to Path: {new_path}")
+
+        # atualiza sessão atual
+        os.environ["Path"] = new_value
+
     except Exception as e:
-        print("Failed to update PATH:", e)
+        print("Failed to update Path:", e)
+
+
+
+import ctypes
+
+def refresh_environment():
+    HWND_BROADCAST = 0xFFFF
+    WM_SETTINGCHANGE = 0x001A
+
+    ctypes.windll.user32.SendMessageTimeoutW(
+        HWND_BROADCAST,
+        WM_SETTINGCHANGE,
+        0,
+        "Environment",
+        0,
+        1000,
+        None
+    )
 
 # =========================
 # LINUX INSTALL
@@ -126,7 +199,7 @@ def add_to_path_windows(new_path):
 def install_linux_tools():
     print("Installing AVR tools via apt...")
     subprocess.run(["sudo", "apt", "update"])
-    subprocess.run(["sudo", "apt", "install", "-y", "avr-gcc", "avr-libc", "avrdude"])
+    subprocess.run(["sudo", "apt", "install", "-y", "avr-gcc", "avrdude"])
 
     bashrc = os.path.expanduser("~/.bashrc")
     path_line = 'export PATH=$PATH:/usr/bin'
@@ -240,11 +313,13 @@ def main():
 
     ensure_pyserial()
     ensure_tools()
+    refresh_environment()
 
     generate_compile_commands()
     write_vscode_config()
 
     print("DONE ✔")
+    print("PARA RODAR O PROGRAMMER USE UM NOVO TERMINAL")
 
 
 if __name__ == "__main__":
