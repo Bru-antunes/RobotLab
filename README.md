@@ -36,9 +36,11 @@ Para a versão em Português, [clique aqui](#welcomept)
 
 <br>
 
-## 🤖 Welcome! [EN]
 
 <a name="welcomeen"> </a>
+
+## 🤖 Welcome! [EN]
+
 
 RobotLab is a robotics team created to make knowledge more accessible. We started as part of an academic project, but with a vision that goes beyond the classroom: to develop technology, share our progress, and compete at a high level.
 
@@ -63,8 +65,12 @@ Creators
   </a>
 </p>
 
-## 📦 Projects
+<br>
+
 <a name="projects"> </a>
+
+## 📦 Projects
+
 
 
 ### MAR — Remote Activation Module
@@ -118,10 +124,12 @@ A modular platform based on the Arduino Nano. It allows easy integration with se
 
 ---
 
+<br>
+
+<a name="articles"> </a>
 
 ## 📘 Articles
 
-<a name="articles"> </a>
 
 ### [Development of an Autonomous Robot for Competitive and Educational Purposes in the Sumo Category](https://doi.org/10.1109/SBR/WRE63066.2024.10837592)
 
@@ -140,10 +148,12 @@ A modular platform based on the Arduino Nano. It allows easy integration with se
 
 ---
 
+<br>
+
+<a name="license"> </a>
 
 ## 📜 License
 
-<a name="license"> </a>
 
 This project is licensed under multiple licenses:
 
@@ -155,9 +165,11 @@ This project is licensed under multiple licenses:
 
 <br><br>
 
+<a name="welcomept"> </a>
+
 ## 🤖 Bem-vindo! [PT]
 
-<a name="welcomept"> </a>
+
 
 A RobotLab é uma equipe de robótica criada para tornar o conhecimento mais acessível. Começamos como parte de um projeto acadêmico, mas com uma visão que vai além da sala de aula: desenvolver tecnologia, compartilhar nosso progresso e competir em alto nível.
 
@@ -182,8 +194,12 @@ Criadores
   </a>
 </p>
 
-## 📦 Projetos
+<br>
+
 <a name="projetos"> </a>
+
+## 📦 Projetos
+
 
 ### MAR — Módulo de Ativação Remota
 - 💻 **Software:** [✅ Disponível ](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)
@@ -237,9 +253,13 @@ Uma plataforma modular baseada no Arduino Nano. Permite fácil integração com 
 
 ---
 
-## 📘 Artigos
+<br>
 
 <a name="artigos"> </a>
+
+## 📘 Artigos
+
+
 
 ### [Desenvolvimento de um Robô Autônomo para Fins Competitivos e Educacionais na Categoria Sumô](https://doi.org/10.1109/SBR/WRE63066.2024.10837592)
 
@@ -259,11 +279,12 @@ Uma plataforma modular baseada no Arduino Nano. Permite fácil integração com 
 
 ---
 
+<br>
 
+<a name="licenca"> </a>
 
 ## 📜 Licença
 
-<a name="licenca"> </a>
 
 Este projeto está licenciado sob múltiplas licenças:
 
