@@ -63,7 +63,7 @@ Transversally across the architecture, the safety module plays a fundamental rol
 
 ---
 
-# Implementation of the Proposed Architecture in the Veteran Robot
+# Implementation of the Proposed Architecture in the Veterano Robot
 
 The system was implemented in the Visual Studio Code development environment using the ESP-IDF framework integrated with PlatformIO, aiming for greater control over build system configuration, debugging, and dependency management. The chosen embedded platform was the ESP32-S3 microcontroller, leveraging its parallel processing capabilities, support for advanced peripherals, and energy efficiency. Additionally, the 4D Systems gen4-ESP32-S3 (N16R8) board was used, which integrates expanded memory and graphical resources, facilitating integration with the sensing, control, and communication modules defined in the system architecture.
 
