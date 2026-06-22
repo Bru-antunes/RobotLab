@@ -47,6 +47,10 @@ The work presented by Antunes et al. (2025) describes the development of a low-c
 
 The SIRC protocol is based on the time-encoding of infrared signals, where information is represented by pulse duration rather than fixed voltage levels. Each transmission begins with a start bit, characterized by a longer pulse used for synchronization. This is followed by a sequence of data bits, where binary values are distinguished solely by timing: a logic ‘1’ is represented by a longer interval, while a logic ‘0’ corresponds to a shorter one. This approach requires the receiver to accurately measure time intervals between signal transitions, making timers and interrupts essential for correct decoding.
 
+![SIRC](../images/MAR/SIRC.png)
+
+**SIRC protocol Workflow**
+
 ### 2.2 Decoding logic
 
 In Antunes et al. (2025), signal reception is performed by detecting signal edges combined with time interval measurement. From this, the transmitted bit sequence can be reconstructed. The decoding logic starts with the detection of the start bit, which serves as a synchronization reference. Once this initial event is identified, the system proceeds with sequential bit reading based on measured timing intervals. After the full data packet is received, a validation step is performed before executing the corresponding action, improving system reliability. The authors also account for noise and signal variations by introducing tolerance margins in timing measurements, ensuring robustness in environments with electromagnetic interference or lighting fluctuations.
@@ -65,7 +69,32 @@ Another relevant modification involved the interrupt system. While the original 
 
 ## 4. Hardware design
 
-The system was implemented on a compact PCB with dimensions 15mm by 14mm, aiming to facilitate integration into different sumo robot platforms. The circuit includes two indicator LEDs (blue and red), used to visually signal system states during operation, enabling quick status identification during testing and competitions. From an electronic standpoint, the design includes a pull-up resistor on the microcontroller reset pin to ensure stable operation, as well as current-limiting resistors for the LEDs. The infrared receiver used is the TSOP4838, which includes internal filtering and demodulation stages optimized for 38 kHz signals. It also features automatic gain control (AGC), increasing robustness under varying lighting conditions. Unlike simpler sensors such as the TSSP, the TSOP provides better immunity to continuous infrared noise, such as interference from opponent sensors. Additionally, a decoupling capacitor was placed near the microcontroller to stabilize power supply. The receiver circuit also follows manufacturer recommendations, using an additional resistor-capacitor network to reduce power line noise and improve signal reliability.
+The system was implemented on a compact PCB with dimensions 15mm by 14mm, aiming to facilitate integration into different sumo robot platforms. The circuit includes two indicator LEDs (blue and red), used to visually signal system states during operation, enabling quick status identification during testing and competitions. From an electronic standpoint, the design includes a pull-up resistor on the microcontroller reset pin to ensure stable operation, as well as current-limiting resistors for the LEDs. The infrared receiver used is the TSOP4838, which includes internal filtering and demodulation stages optimized for 38 kHz signals. It also features automatic gain control (AGC), increasing robustness under varying lighting conditions. Unlike simpler sensors such as the TSSP, the TSOP provides better immunity to continuous infrared noise, such as interference from opponent sensors. Additionally, a decoupling capacitor was placed near the microcontroller to stabilize power supply. The receiver circuit also follows manufacturer recommendations, using an additional resistor-capacitor network to reduce power line noise and improve signal reliability. For more information on hardware design and gerber, access [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR).
+
+## 5. Cost and Performance
+
+For the MAR, the obtained results highlight the advantages of the proposed approach in comparison with both the commercial solution and the system described in Antunes et al. (2025). From an economic perspective, a significant reduction in the implementation cost of the developed module was observed. While the analyzed commercial solution has an estimated cost of USD 6.95, the system described in the reference article has a cost of USD 5.18. In contrast, the solution proposed in this work, based on a modular architecture and low-cost components, achieves a total cost of only USD 1.1511, with the costs detailed in the table below, excluding shipping and labor costs. This substantial reduction reinforces the impact of system miniaturization and the selection of electronic and structural components, enabling the development of an affordable solution for competitive robotics applications.
+
+| Description          | Value (USD) |
+|---------------------|------------:|
+| PCB                 | 0.3267 |
+| 100 nF Capacitor    | 0.0047 |
+| 4.7 μF Capacitor    | 0.0147 |
+| Red LED             | 0.0132 |
+| Blue LED            | 0.0132 |
+| 220 Ω Resistor      | 0.0053 |
+| 220 Ω Resistor      | 0.0053 |
+| 7.5 kΩ Resistor     | 0.0053 |
+| 100 Ω Resistor      | 0.0053 |
+| TSOP4838            | 0.3920 |
+| Pin Header Connector| 0.0052 |
+| ATTINY13A           | 0.6300 |
+| **TOTAL**           | **1.1511** |
+
+In addition to the cost reduction, the results also demonstrate an improvement in the temporal performance of the remote activation system. Similarly to what was observed in the reference work, the proposed module maintains superiority over the analyzed commercial solution. While the commercial system presents a response time of approximately 33 ms, the module developed in this work achieves a response time of 18 ms, evidencing a significant improvement in actuation latency. This performance is particularly relevant in sumo robotics applications, where reduced response times directly impact the competitiveness and reliability of the starting system. Figure A presents the average response time of the commercial solution system to the infrared signal, while Figure B presents the average response time of the system developed in this work.
+
+![responsetimeMAR](../images/MAR/responsetimeMAR.png)
+**Response time: A) Comercial module; B) MAR**
 
 ## 6. ATTINY13A programming process
 
@@ -73,7 +102,7 @@ The ATTINY13A setup required specific configuration and programming steps. Initi
 
 ## 7. Development automation tools
 
-To improve accessibility and reproducibility, two software tools were developed: MAR_setup and MAR_programmer. These tools automate critical steps in the development workflow, reducing manual configuration requirements.
+To improve accessibility and reproducibility, two software tools were developed: MAR_setup and MAR_programmer. These tools automate critical steps in the development workflow, reducing manual configuration requirements. For more information on automation tools, access [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR).
 
 ### 7.1 MAR_setup
 
@@ -137,6 +166,10 @@ O trabalho apresentado por Antunes et al. (2025) descreve o desenvolvimento de u
 
 O protocolo SIRC é baseado na codificação temporal de sinais infravermelhos, onde a informação é representada pela duração dos pulsos em vez de níveis fixos de tensão. Cada transmissão começa com um bit de início (start bit), caracterizado por um pulso mais longo usado para sincronização. Em seguida, há uma sequência de bits de dados, onde os valores binários são distinguidos exclusivamente pelo tempo: um bit lógico ‘1’ é representado por um intervalo mais longo, enquanto um ‘0’ corresponde a um intervalo mais curto. Essa abordagem exige que o receptor meça com precisão os intervalos de tempo entre transições do sinal, tornando timers e interrupções essenciais para a decodificação correta.
 
+![SIRC](../images/MAR/SIRC.png)
+
+**Funcionamento do protocolo SIRC**
+
 ### 2.2 Lógica de decodificação
 
 Em Antunes et al. (2025), a recepção do sinal é realizada por meio da detecção de bordas combinada com a medição de intervalos de tempo. A partir disso, a sequência de bits transmitida pode ser reconstruída. A lógica de decodificação começa com a detecção do bit de início, que serve como referência de sincronização. Uma vez identificado esse evento inicial, o sistema prossegue com a leitura sequencial dos bits com base nos intervalos de tempo medidos. Após o recebimento completo do pacote de dados, uma etapa de validação é realizada antes da execução da ação correspondente, aumentando a confiabilidade do sistema. Os autores também consideram ruído e variações de sinal ao introduzir margens de tolerância nas medições de tempo, garantindo robustez em ambientes com interferência eletromagnética ou variações de iluminação.
@@ -157,8 +190,32 @@ Outra modificação relevante envolveu o sistema de interrupções. Enquanto a i
 
 ## 4. Projeto de hardware
 
-O sistema foi implementado em uma PCB compacta com dimensões de 15 mm por 14 mm, visando facilitar a integração em diferentes plataformas de robôs de sumô. O circuito inclui dois LEDs indicadores (azul e vermelho), utilizados para sinalizar visualmente os estados do sistema durante a operação, permitindo identificação rápida durante testes e competições. Do ponto de vista eletrônico, o design inclui um resistor de pull-up no pino de reset do microcontrolador para garantir operação estável, além de resistores de limitação de corrente para os LEDs. O receptor infravermelho utilizado é o TSOP4838, que inclui etapas internas de filtragem e demodulação otimizadas para sinais de 38 kHz. Ele também possui controle automático de ganho (AGC), aumentando a robustez em condições variáveis de iluminação. Diferentemente de sensores mais simples como o TSSP, o TSOP oferece melhor imunidade a ruídos infravermelhos contínuos, como interferências de sensores adversários. Além disso, um capacitor de desacoplamento foi colocado próximo ao microcontrolador para estabilizar a alimentação. O circuito do receptor também segue recomendações do fabricante, utilizando uma rede adicional resistor-capacitor para reduzir ruído na linha de alimentação e melhorar a confiabilidade do sinal.
+O sistema foi implementado em uma PCB compacta com dimensões de 15 mm por 14 mm, visando facilitar a integração em diferentes plataformas de robôs de sumô. O circuito inclui dois LEDs indicadores (azul e vermelho), utilizados para sinalizar visualmente os estados do sistema durante a operação, permitindo identificação rápida durante testes e competições. Do ponto de vista eletrônico, o design inclui um resistor de pull-up no pino de reset do microcontrolador para garantir operação estável, além de resistores de limitação de corrente para os LEDs. O receptor infravermelho utilizado é o TSOP4838, que inclui etapas internas de filtragem e demodulação otimizadas para sinais de 38 kHz. Ele também possui controle automático de ganho (AGC), aumentando a robustez em condições variáveis de iluminação. Diferentemente de sensores mais simples como o TSSP, o TSOP oferece melhor imunidade a ruídos infravermelhos contínuos, como interferências de sensores adversários. Além disso, um capacitor de desacoplamento foi colocado próximo ao microcontrolador para estabilizar a alimentação. O circuito do receptor também segue recomendações do fabricante, utilizando uma rede adicional resistor-capacitor para reduzir ruído na linha de alimentação e melhorar a confiabilidade do sinal. Para mais informações do design de hardware e gerber, acesse [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR).
 
+## 5. Custo e desempenho
+
+Para o MAR, os resultados obtidos evidenciam as vantagens da abordagem proposta em relação tanto à solução comercial quanto ao sistema descrito em Antunes et al. (2025). Do ponto de vista econômico, observou-se uma redução significativa no custo de implementação do módulo desenvolvido. Enquanto a solução comercial analisada apresenta custo estimado de 6,95 USD, o sistema descrito no artigo de referência possui custo de 5,18 USD. Já a solução proposta neste trabalho, baseada em arquitetura modular e componentes de baixo custo, atinge um valor de apenas 1,1511 USD, com custos discriminados na Tabela abaixo, desconsiderando custos de frete e mão de obra. Essa redução expressiva reforça o impacto da miniaturização do sistema e da escolha de componentes eletrônicos e estruturais, permitindo a viabilização de uma solução acessível para aplicações em robótica competitiva.
+
+| Descrição             | Valor (USD) |
+|----------------------|------------:|
+| PCB                  | 0,3267 |
+| Capacitor 100 nF     | 0,0047 |
+| Capacitor 4,7 μF     | 0,0147 |
+| LED vermelho         | 0,0132 |
+| LED azul             | 0,0132 |
+| Resistor 220 Ω       | 0,0053 |
+| Resistor 220 Ω       | 0,0053 |
+| Resistor 7,5 kΩ      | 0,0053 |
+| Resistor 100 Ω       | 0,0053 |
+| TSOP4838             | 0,3920 |
+| Conector Pinheader   | 0,0052 |
+| ATTINY13A            | 0,6300 |
+| **TOTAL**            | **1,1511** |
+
+Além da redução de custo, os resultados também demonstram melhoria no desempenho temporal do sistema de ativação remota. De maneira similar ao observado no trabalho de referência, o módulo proposto mantém superioridade em relação à solução comercial analisada. Enquanto o sistema comercial apresenta um tempo de resposta de aproximadamente 33 ms, o módulo desenvolvido neste trabalho atinge um tempo de resposta de 18 ms, evidenciando uma melhoria significativa na latência de acionamento. Esse desempenho é particularmente relevante em aplicações de robótica de sumô, nas quais tempos de resposta reduzidos impactam diretamente a competitividade e a confiabilidade do sistema de partida. A Figura A apresenta o tempo médio de resposta do sistema de solução comercial ao sinal infravermelho, enquanto a Figura B apresenta o tempo médio de resposta do sistema desenvolvido neste trabalho.
+
+![responsetimeMAR](../images/MAR/responsetimeMAR.png)
+**Tempo de resposta: A) Módulo comercial; B) MAR**
 
 ## 6. Processo de programação do ATTINY13A
 
@@ -167,12 +224,11 @@ A configuração do ATTINY13A exigiu etapas específicas de configuração e pro
 
 ## 7. Ferramentas de automação do desenvolvimento
 
-Para melhorar a acessibilidade e reprodutibilidade, foram desenvolvidas duas ferramentas de software: MAR_setup e MAR_programmer. Essas ferramentas automatizam etapas críticas do fluxo de desenvolvimento, reduzindo a necessidade de configuração manual.
+Para melhorar a acessibilidade e reprodutibilidade, foram desenvolvidas duas ferramentas de software: MAR_setup e MAR_programmer. Essas ferramentas automatizam etapas críticas do fluxo de desenvolvimento, reduzindo a necessidade de configuração manual. Para mais informações de ferramentas de automação, acesse [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR).
 
 ### 7.1 MAR_setup
 
 O MAR_setup automatiza a configuração do ambiente de desenvolvimento. Ele é compatível com sistemas Windows e Linux, adaptando seu comportamento conforme o sistema operacional. No Windows, ele baixa ferramentas essenciais como avr-gcc e avrdude de fontes oficiais, organiza diretórios do projeto e configura variáveis de ambiente automaticamente. No Linux, a instalação é simplificada por meio do gerenciador de pacotes do sistema, instalando automaticamente as dependências necessárias. Isso elimina etapas manuais de configuração e garante consistência entre diferentes ambientes de desenvolvimento.
-
 
 ### 7.2 MAR_programmer
 
