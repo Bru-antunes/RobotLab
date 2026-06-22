@@ -33,7 +33,7 @@ Main adaptations:
 - 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
 - 🔧 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)
 - 📚 Documentation: [RobotLab/docs/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)
-
+- 🔖 References: [RobotLab/docs/References](https://github.com/Bru-antunes/RobotLab/tree/main/docs/References)
 
 ## 1. Context
 
@@ -49,7 +49,7 @@ The SIRC protocol is based on the time-encoding of infrared signals, where infor
 
 ![SIRC](../images/MAR/SIRC.png)
 
-**SIRC protocol Workflow**
+**SIRC protocol Workflow. Source: Antunes et al. (2025).**
 
 ### 2.2 Decoding logic
 
@@ -94,7 +94,7 @@ For the MAR, the obtained results highlight the advantages of the proposed appro
 In addition to the cost reduction, the results also demonstrate an improvement in the temporal performance of the remote activation system. Similarly to what was observed in the reference work, the proposed module maintains superiority over the analyzed commercial solution. While the commercial system presents a response time of approximately 33 ms, the module developed in this work achieves a response time of 18 ms, evidencing a significant improvement in actuation latency. This performance is particularly relevant in sumo robotics applications, where reduced response times directly impact the competitiveness and reliability of the starting system. Figure A presents the average response time of the commercial solution system to the infrared signal, while Figure B presents the average response time of the system developed in this work.
 
 ![responsetimeMAR](../images/MAR/responsetimeMAR.png)
-**Response time: A) Comercial module; B) MAR**
+**Response time: A) Comercial module; B) MAR. Source: Antunes et al. (2025).**
 
 ## 6. ATTINY13A programming process
 
@@ -147,7 +147,9 @@ Principais adaptações:
 
 - 💻 Software: [RobotLab/software/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/software/MAR)  
 - 🔧 Hardware: [RobotLab/hardware/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/hardware/MAR)  
-- 📚 Documentação: [RobotLab/docs/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)  
+- 📚 Documentação: [RobotLab/docs/MAR](https://github.com/Bru-antunes/RobotLab/tree/main/docs/MAR)
+- 🔖 Referências: [RobotLab/docs/References](https://github.com/Bru-antunes/RobotLab/tree/main/docs/References)
+
 
 ---
 
@@ -168,7 +170,7 @@ O protocolo SIRC é baseado na codificação temporal de sinais infravermelhos, 
 
 ![SIRC](../images/MAR/SIRC.png)
 
-**Funcionamento do protocolo SIRC**
+**Funcionamento do protocolo SIRC. Fonte: Antunes et al. (2025).**
 
 ### 2.2 Lógica de decodificação
 
@@ -215,7 +217,7 @@ Para o MAR, os resultados obtidos evidenciam as vantagens da abordagem proposta 
 Além da redução de custo, os resultados também demonstram melhoria no desempenho temporal do sistema de ativação remota. De maneira similar ao observado no trabalho de referência, o módulo proposto mantém superioridade em relação à solução comercial analisada. Enquanto o sistema comercial apresenta um tempo de resposta de aproximadamente 33 ms, o módulo desenvolvido neste trabalho atinge um tempo de resposta de 18 ms, evidenciando uma melhoria significativa na latência de acionamento. Esse desempenho é particularmente relevante em aplicações de robótica de sumô, nas quais tempos de resposta reduzidos impactam diretamente a competitividade e a confiabilidade do sistema de partida. A Figura A apresenta o tempo médio de resposta do sistema de solução comercial ao sinal infravermelho, enquanto a Figura B apresenta o tempo médio de resposta do sistema desenvolvido neste trabalho.
 
 ![responsetimeMAR](../images/MAR/responsetimeMAR.png)
-**Tempo de resposta: A) Módulo comercial; B) MAR**
+**Tempo de resposta: A) Módulo comercial; B) MAR. Fonte: Antunes et al. (2025)**
 
 ## 6. Processo de programação do ATTINY13A
 
