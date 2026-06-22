@@ -152,7 +152,7 @@ A modular platform based on the Arduino Nano. It allows easy integration with se
 
 <a name="license"> </a>
 
-## 📜 License
+## 📜 License and References
 
 
 This project is licensed under multiple licenses:
@@ -160,6 +160,9 @@ This project is licensed under multiple licenses:
 - Software: AGPL-3.0
 - Hardware: CERN-OHL-S v2
 - Documentation: CC-BY-SA 4.0
+
+All references used in this project can be found at [🔖 References](https://github.com/Bru-antunes/RobotLab/tree/main/docs/References)
+
 
 
 
@@ -283,7 +286,7 @@ Uma plataforma modular baseada no Arduino Nano. Permite fácil integração com 
 
 <a name="licenca"> </a>
 
-## 📜 Licença
+## 📜 Licença e Referências
 
 
 Este projeto está licenciado sob múltiplas licenças:
@@ -292,3 +295,4 @@ Este projeto está licenciado sob múltiplas licenças:
 - Hardware: CERN-OHL-S v2
 - Documentação: CC-BY-SA 4.0
 
+Todas as referências utilizadas nesse projeto podem ser encontadas em [🔖 References](https://github.com/Bru-antunes/RobotLab/tree/main/docs/References)
