@@ -7,6 +7,8 @@ Para a versão em Português, [clique aqui](#pt)
 
 - 💻 Software: [RobotLab/software/DarwinFlow](https://github.com/Bru-antunes/RobotLab/tree/main/software/DarwinFlow)  
 - 📚 Documentation: [RobotLab/docs/DarwinFlow](https://github.com/Bru-antunes/RobotLab/tree/main/docs/DarwinFlow)
+- 🔖 References: [RobotLab/docs/References](https://github.com/Bru-antunes/RobotLab/tree/main/docs/References)
+
 
 ---
 
@@ -148,6 +150,7 @@ The safety module ensures safe robot operation during testing and competition. I
 
 - 💻 Software: [RobotLab/software/DarwinFlow](https://github.com/Bru-antunes/RobotLab/tree/main/software/DarwinFlow)   
 - 📚 Documentação: [RobotLab/docs/DarwinFlow](https://github.com/Bru-antunes/RobotLab/tree/main/docs/DarwinFlow)
+- 🔖 Referências: [RobotLab/docs/References](https://github.com/Bru-antunes/RobotLab/tree/main/docs/References)
 
 ---
 
