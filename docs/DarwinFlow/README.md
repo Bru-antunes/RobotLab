@@ -1,6 +1,9 @@
 # 🧬DarwinFlow Architecture [EN]
 
+
+
 Para a versão em Português, [clique aqui](#pt)
+---
 
 The DarwinFlow system is inspired by principles of cognitive robotics, a field that combines perception layers to enable robots to interpret their environment, handle uncertainty, and make informed decisions [Hawes et al., 2017; Krichmar, 2018]. In robotic systems, cognition refers to the computational ability to perceive, interpret, and act in environments through adaptive processes such as learning, inference, and memory integration [Langley et al., 2020; Kotseruba and Tsotsos, 2020]. Although the sumo robot operates in a controlled environment, the challenges imposed by combat dynamics, sensory limitations, and the need for fast response make it a relevant case for applying and studying these concepts.
 
@@ -119,6 +122,9 @@ The safety module ensures safe robot operation during testing and competition. I
 
 
 # 🧬Arquitetura DarwinFlow [PT]
+
+<a name="pt"> </a>
+---
 
 O sistema DarwinFlow é inspirado em princípios da robótica cognitiva, área que combina camada de percepção para permitir que robôs interpretem o ambiente, lidem com incertezas e tomem decisões informadas [Hawes et al.,2017; Krichmar, 2018]. Em sistemas robóticos, a cognição refere-se à capacidade computacional de perceber, interpretar e agir em ambientes por meio de processos adaptativos, como aprendizado, inferência e integração de memória [Langley et al., 2020; Kotseruba and Tsotsos, 2020]. Embora o robô de sumô opere em um ambiente controlado, os desafios impostos pela dinâmica do combate, pela limitação sensorial e pela necessidade de resposta rápida tornam-no um caso relevante para a aplicação e estudo desses conceitos.
 
