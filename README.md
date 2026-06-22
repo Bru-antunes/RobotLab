@@ -231,7 +231,7 @@ Um sensor dedicado à detecção de linhas (contraste claro/escuro), utilizado p
 
 ### Arquitetura DarwinFlow
 - 💻 **Software:** 🛠️ Em desenvolvimento  
-- 📚 **Documentação:** 🛠️ Em desenvolvimento
+- 📚 **Documentação:** [✅ Disponível ](https://github.com/Bru-antunes/RobotLab/tree/main/docs/DarwinFlow)
 
 Uma arquitetura de software modular projetada para padronizar e escalar o código de robôs. A DarwinFlow organiza a leitura de sensores, tomada de decisão e controle de atuadores, melhorando a manutenibilidade, testes e evolução do sistema.
 
