@@ -33,31 +33,27 @@ This architecture can be abstracted and applied to different types of systems wh
 
 ## Hierarchical Layer Description
 
-### Ground Station
+#### Ground Station
 
 The Ground Station (or operator base station) acts as an external configuration interface, used before the start of a match to define the mission objective, navigation strategy, and general operational parameters. These include, for example, the type of strategy used to search for the target, initial movement patterns, and engagement criteria. Additionally, the Ground Station is responsible for sending start and stop commands, enabling or disabling the robot remotely. Information from this block is forwarded to the embedded system as mission parameters and navigation configurations, which directly feed the action block.
 
----
 
-### High Level
+#### High Level
 
 At the high level, the action block coordinates the overall execution flow and robot behavior. Initially, the system remains in an initialization state, where safety conditions are verified. Once operation permission is granted, the robot enters initialization routines and then navigation, responsible for executing a defined strategy. During navigation, the system continuously evaluates perception data to determine whether a target has been found. When this condition is met, a transition occurs to the mission routine, which represents the final desired behavior.
 
----
 
-### Mid Level
+#### Mid Level
 
 The mid level concentrates perception and control blocks, responsible for transforming raw sensor data into coherent motion commands. The perception block continuously receives sensing data from the lower level and organizes it into two main functions: detection and estimation. Detection identifies relevant mission events, such as target presence, proximity to boundaries, or conditions requiring stopping. The estimation module processes this information to infer robot states such as position and velocity, providing a more robust representation of the robot’s dynamic state. These processed estimates are then forwarded to the control block. Based on the received control data, the system computes the necessary motion parameters. Speed control ensures appropriate velocity during routines, while orientation control ensures correct alignment with the environment. These parameters are continuously adjusted based on the estimated state and high-level objectives.
 
----
 
-### Low Level
+#### Low Level
 
 At the low level are the sensing and actuation blocks, responsible for direct interaction with the physical environment. The sensing block is composed of sensors dedicated to target detection, boundary identification, and acquisition of position and velocity information. These sensors provide raw data to the system, which is forwarded to the mid level for processing and decision-making. The actuator block receives motion parameters computed by the control system and converts them into physical actions. The motor driver acts as a power interface, translating control commands into electrical signals suitable for the motors, which then move the robot.
 
----
 
-### Safety Module
+#### Safety Module
 
 Transversally across the architecture, the safety module plays a fundamental role in system reliability. It manages safety states such as standby mode, normal operation, and emergency stop. Remote activation provides the necessary commands to transition between these states, ensuring compliance with competition rules and allowing immediate interruption in critical situations. In case of emergency, this module overrides all other levels, placing the system into a safe state.
 
@@ -67,54 +63,71 @@ Transversally across the architecture, the safety module plays a fundamental rol
 
 The system was implemented in the Visual Studio Code development environment using the ESP-IDF framework integrated with PlatformIO, aiming for greater control over build system configuration, debugging, and dependency management. The chosen embedded platform was the ESP32-S3 microcontroller, leveraging its parallel processing capabilities, support for advanced peripherals, and energy efficiency. Additionally, the 4D Systems gen4-ESP32-S3 (N16R8) board was used, which integrates expanded memory and graphical resources, facilitating integration with the sensing, control, and communication modules defined in the system architecture.
 
----
 
 ## Low Level
 
-This layer contains all modules responsible for sensor reading, motor actuation, and peripheral management. The goal of this separation is to abstract hardware details, allowing higher layers to use already processed information without needing to know ESP32-S3 registers or peripherals. The Motor_Task.h file is responsible for motor control. This module configures PWM channels, manages rotation direction through the DRV8871 H-bridge, and converts velocity values stored in global variables into electrical signals applied to the motors. Thus, control strategies only define the desired speed for each side of the robot, while the motor module handles signal generation. The firmware works with a logical abstraction of left and right motors, independent of the physical wiring. Desired speeds are stored in global variables and later converted into PWM signals during motor updates. Commands range from -1023 to +1023, where positive values correspond to forward motion, negative values to reverse motion, and zero to full stop.
+This layer contains all modules responsible for sensor reading, motor actuation, and peripheral management. The objective of this separation is to abstract *hardware* details, allowing the upper layers to use already processed information without needing to know the registers or peripherals used by the ESP32-S3. The file Motor_Task.h is responsible for controlling the drive motors. This module configures the microcontroller PWM channels, manages the rotation direction through a DRV8871 H-bridge, and converts the speed values stored in global variables into electrical signals applied to the motors. In this way, the control strategies only define the desired speed for each side of the robot, while the motor module is responsible for generating the corresponding physical signals. The *firmware* operates using a logical abstraction of a left motor and a right motor, regardless of the physical motor connections on the electronic board. The desired speeds are stored in global variables and subsequently converted into PWM signals during the motor module update. Commands range from -1023 to +1023, with positive values associated with forward motion, negative values associated with reverse motion, and zero representing a complete motor stop. The file Encoder_Task.h performs the reading of the incremental *encoders* attached to the motors. Its function is to count the pulses generated during wheel movement, allowing the determination of speed, displacement, and rotation direction. For this purpose, the ESP32-S3 internal peripheral called *Pulse Counter* was used. The obtained values are stored in global structures that can later be used by motion control algorithms. The file IMU_Task.h is responsible for communication with the LSM6DS3 inertial measurement unit through the I2C bus. This module performs the initial configuration of the accelerometer and gyroscope, periodically reads the sensor's internal registers, and converts the raw data into physical quantities that can be used by the other software layers.
 
-The Encoder_Task.h file reads incremental encoders attached to the motors. Its function is to count pulses generated during wheel movement, allowing determination of speed, displacement, and rotation direction. For this, the ESP32-S3 internal peripheral called Pulse Counter is used. The obtained values are stored in global structures used by motion control algorithms.
+The file BorderSensors_Task.h manages the digital border sensors installed on the underside of the robot. Its main function is to identify the presence of the white line that defines the combat arena boundary. In addition to reading the individual left and right sensors, the module also generates consolidated states that simplify decision-making for higher-level strategies. The border sensor values are stored in a global structure containing the individual states of the left and right sensors, as well as a consolidated state indicating whether no border was detected, only the left border was detected, only the right border was detected, or both borders were detected simultaneously. The file FOUROpponentSensors_Task.h performs the reading of the four sensors responsible for opponent detection. The module interprets the individual readings and generates logical states representing the opponent's relative position. In this way, the combat strategies do not need to directly interpret each sensor and can instead use already processed information, such as the presence of the opponent on the left, on the right, on one of the diagonals, or directly in front of the robot. The file LED_Task.h controls the status LEDs present on the electronic board. Although it does not directly participate in combat strategies, this module is used for debugging, indication of internal system states, and assistance during testing. Finally, the file pinmap.h centralizes all project *hardware* definitions. Its purpose is to centralize the association between logical functions and physical microcontroller pins, facilitating future modifications to the electronic board without requiring changes to other software modules. Table below presents the files at the low level of abstraction.
 
-The IMU_Task.h file handles communication with the LSM6DS3 inertial measurement unit via I2C. It configures the accelerometer and gyroscope, performs periodic sensor reads, and converts raw data into usable physical quantities for higher layers.
+### Low-Level Layer Files and Their Functions
 
-The BorderSensors_Task.h file manages digital boundary sensors installed at the bottom of the robot. Its main function is to detect the white line delimiting the combat arena. In addition to individual left and right sensor readings, it also generates consolidated states that simplify decision-making. These states indicate whether no boundary is detected, only the left boundary, only the right boundary, or both simultaneously.
+| File                       | Function                                                                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Motor_Task.h               | Motor control through DRV8871 H-bridges, PWM signal generation, and management of motor rotation direction.                     |
+| Encoder_Task.h             | Reading of incremental encoders, pulse counting, and acquisition of speed and displacement information.                         |
+| IMU_Task.h                 | Communication with the LSM6DS3 IMU via I2C, configuration of the accelerometer and gyroscope, and acquisition of inertial data. |
+| BorderSensors_Task.h       | Reading of border sensors and generation of logical states related to the detection of the arena boundary line.                 |
+| FOUROpponentSensors_Task.h | Reading of opponent detection sensors and generation of relative opponent positioning states.                                   |
+| LED_Task.h                 | Control of status LEDs used for debugging, state indication, and system testing.                                                |
+| pinmap.h                   | Centralization of the physical microcontroller pin mapping and association between hardware and logical functions.              |
 
-The FOUROpponentSensors_Task.h file reads the four sensors responsible for opponent detection. It generates logical states representing the opponent’s relative position, such as left, right, diagonal, or front.
 
-The LED_Task.h file controls the signaling LEDs on the board. Although not directly involved in combat strategies, it is used for debugging, system state indication, and testing.
-
-Finally, the pinmap.h file centralizes all hardware definitions, mapping logical functions to physical microcontroller pins.
-
----
 
 ## Mid Level
 
-The mid-level layer organizes information from physical devices and creates abstractions used by combat strategies. The globalVariables.h file is the main communication mechanism between firmware modules, storing structures for sensors, motors, encoders, IMU, LEDs, and system states.
+The mid-level layer is responsible for organizing the information obtained from physical devices and creating abstractions that will be used by the combat strategies. This layer contains the elements responsible for data sharing and overall system configuration. The file globalVariables.h constitutes the main communication mechanism between the *firmware* modules. It stores the structures containing information from sensors, motors, *encoders*, IMU, LEDs, and the robot's general states. This approach allows different modules to share information in an organized and standardized manner. The file config.h gathers all project configurations in a single location. This file defines compilation parameters, feature enablement, operating frequencies, sensor and motor inversions, as well as other options related to *hardware* configuration. The use of this file allows the *firmware* to be quickly adapted to different versions of the robot without requiring extensive code modifications. The module also defines global variables responsible for the overall system state, including the robot's current operating mode, information about active strategies, and parameters used by the control routines. In this way, the mid-level layer acts as an interface between the physical devices and the decision-making algorithms.
 
-The config.h file centralizes all project configuration, including compilation parameters, feature flags, operating frequencies, sensor/motor inversion, and hardware options. It also defines global variables representing system state and strategy control.
+At the intermediate level of the architecture, in addition to the routines already implemented, there is room for the incorporation of more advanced processing and decision-making algorithms. This layer acts as an interface between the raw data provided by the sensors and the high-level strategies, being responsible for transforming elementary information into variables that are more useful for robot control. One of the intended applications for this layer is the implementation of motion control algorithms. Based on data from the *encoders* and the IMU, speed and position controllers, such as PID controllers, can be developed to compensate for mechanical differences between the motors and improve the accuracy of maneuvers performed during combat. This approach allows the movements defined by the strategies to be executed in a more consistent and repeatable manner. Another functionality that can be incorporated is sensor fusion. In this context, information from different sensors can be combined to obtain more reliable estimates of the robot's state. Data from the accelerometer, gyroscope, and *encoders* can be used together to estimate orientation, angular velocity, and displacement, reducing the individual limitations of each sensor and increasing system robustness. Digital filtering algorithms can also be implemented to reduce noise from sensor readings. The table below presents the files at the mid level of abstraction.
 
-This layer also provides space for more advanced processing algorithms, such as motion control (PID controllers), sensor fusion (IMU + encoders), and digital filtering to reduce noise and improve robustness.
+### Mid-Level Layer Files and Their Functions
 
----
+| File              | Function                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| globalVariables.h | Storage of global structures shared between sensors, actuators, strategies, and system modules.                    |
+| config.h          | Definition of the project's general configurations, module enablement, operating parameters, and hardware options. |
+
+
 
 ## High Level
 
-The high-level layer contains the algorithms responsible for robot behavior during competition, including navigation, search, attack, and boundary recovery strategies.
+The high-level layer concentrates the algorithms responsible for the robot's behavior during competition. In this layer, the navigation, search, attack, and border strategies are implemented, using exclusively the abstractions provided by the lower layers. The file Strategy_Init_7.h implements the initialization routine used at the beginning of the match. This strategy executes a pre-programmed sequence of movements that positions the robot in the arena before the start of the search and attack actions. The file Strategy_Search_Forward.h is responsible for the search strategy. While no opponent is detected by the sensors, the robot continues moving forward in a straight line across the arena. When a valid detection occurs, the system transitions to attack mode. The file Strategy_Attack_DoubleFront.h implements the robot's main offensive strategy. This module uses the states provided by the opponent sensors to determine the target direction and adjust the robot's movement. Depending on the detected position, the system may perform turns, diagonal movements, or frontal attacks at maximum speed. The algorithm also incorporates a boost routine intended to increase pushing force during prolonged frontal contact situations. The file Strategy_Border_180.h implements the defensive border recovery strategy. Whenever a border sensor identifies the arena boundary line, this strategy takes control of the robot, executing a reverse maneuver followed by an approximate 180-degree rotation before returning to search mode.
 
-The Strategy_Init_7.h module implements the initialization routine executed at the start of a match.
-The Strategy_Search_Forward.h module defines a forward search behavior when no opponent is detected.
-The Strategy_Attack_DoubleFront.h module implements the main offensive behavior based on opponent sensor data, including directional adjustments and a pushing impulse routine.
-The Strategy_Border_180.h module implements the defensive boundary recovery strategy, performing a retreat followed by an approximate 180-degree rotation.
+It is important to highlight that the strategies presented in this work represent only an initial implementation of the robot's behaviors. The developed architecture was designed to allow the inclusion of new strategies in a simple and modular manner, enabling the continuous evolution of the system as new tests, competitions, and performance analyses are conducted. Thus, each robot operating mode, such as initialization, search, attack, and border, may have multiple associated strategies, each suitable for different combat scenarios. To enable this expansion, the Select_strategy.h module was developed, responsible for selecting the strategies used by the robot in each operating mode. Instead of directly associating a single strategy with each state of the main state machine, the system uses this module as an intermediate management layer, allowing different implementations to be selected without modifications to the central *firmware* logic. In addition to simplifying code maintenance, this approach makes it possible to implement a *Ground Station* for robot configuration. In this context, the Select_strategy.h module acts as the interface between the embedded *firmware* and the external configuration software. The table below presents the files at the high level of abstraction.
 
-These strategies are modular and expandable. The Select_strategy.h module manages strategy selection for each operating mode, acting as an intermediate layer that allows different strategies to be chosen without modifying core firmware logic. This also enables future integration with a Ground Station configuration interface.
+### High-Level Layer Files and Their Functions
 
----
+| File                          | Function                                                                                                                                    |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Strategy_Init_7.h             | Implementation of the initialization routine responsible for the robot's initial movement after the start of the match.                     |
+| Strategy_Search_Forward.h     | Search strategy responsible for the robot's movement while no opponent is detected.                                                         |
+| Strategy_Attack_DoubleFront.h | Offensive strategy based on the opponent's position detected by the opponent sensors.                                                       |
+| Strategy_Border_180.h         | Border recovery strategy responsible for moving the robot away from the arena boundary line.                                                |
+| Select_Strategy.h             | Management and selection of the strategies used in each robot operating mode, enabling future expansion of the available set of strategies. |
+
 
 ## Ground Station and Safety Module
 
 The Ground Station corresponds to tools used for monitoring, configuration, and debugging during development. Through ESP32-S3 serial communication, it enables real-time monitoring of sensor readings, internal states, IMU data, encoder counts, and strategy states. It also supports future JSON-based configuration interfaces.
 
-The safety module ensures safe robot operation during testing and competition. It is implemented through MAR_Task.h, managing READY, START, and STOP states. When in READY or STOP, motors remain disabled and no strategy is executed.
+The safety module ensures safe robot operation during testing and competition. It is implemented through MAR_Task.h, managing READY, START, and STOP states. When in READY or STOP, motors remain disabled and no strategy is executed. The table below presents the files at the Safety Module and Ground Station abstraction level.
+
+### Ground Station and Safety Module Layer Files and Their Functions
+
+| File/Module                     | Function                                                                                                                                                                                 |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ground Station (to be implemented) | External interface intended for robot configuration, strategy selection, parameter adjustment, and real-time monitoring of variables without requiring firmware recompilation.           |
+| MAR_Task.h / Safety Module      | Implementation of the remote activation module, responsible for the READY, START, and STOP states, as well as motor interlocking.                                                       |
 
 
 ---
@@ -198,7 +211,6 @@ O arquivo BorderSensors\_Task.h gerencia os sensores digitais de borda instalado
 | LED_Task.h                 | Controle dos LEDs de sinalização utilizados para depuração, indicação de estados e testes do sistema.                           |
 | pinmap.h                   | Centralização do mapeamento físico dos pinos do microcontrolador e associação entre hardware e funções lógicas.                 |
 
----
 
 ## Médio nível
 
@@ -214,7 +226,6 @@ No nível intermediário da arquitetura, além das rotinas já implementadas, ex
 | globalVariables.h | Armazenamento das estruturas globais compartilhadas entre sensores, atuadores, estratégias e módulos do sistema.    |
 | config.h          | Definição das configurações gerais do projeto, habilitação de módulos, parâmetros de operação e opções de hardware. |
 
----
 
 ## Alto nível
 
@@ -232,7 +243,6 @@ Cabe destacar que as estratégias apresentadas neste trabalho representam apenas
 | Strategy_Border_180.h         | Estratégia de recuperação de borda responsável por afastar o robô da linha limite da arena.                                                               |
 | Select_Strategy.h             | Gerenciamento e seleção das estratégias utilizadas em cada modo de operação do robô, permitindo a expansão futura do conjunto de estratégias disponíveis. |
 
----
 
 ## Ground Station e Módulo de Segurança
 
