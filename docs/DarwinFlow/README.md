@@ -1,4 +1,124 @@
-# 🧬Arquitetura DarwinFlow
+# 🧬DarwinFlow Architecture [EN]
+
+Para a versão em Português, [clique aqui](#pt)
+
+The DarwinFlow system is inspired by principles of cognitive robotics, a field that combines perception layers to enable robots to interpret their environment, handle uncertainty, and make informed decisions [Hawes et al., 2017; Krichmar, 2018]. In robotic systems, cognition refers to the computational ability to perceive, interpret, and act in environments through adaptive processes such as learning, inference, and memory integration [Langley et al., 2020; Kotseruba and Tsotsos, 2020]. Although the sumo robot operates in a controlled environment, the challenges imposed by combat dynamics, sensory limitations, and the need for fast response make it a relevant case for applying and studying these concepts.
+
+The definition of an architecture is an element that helps ensure consistent implementation of the robot’s embedded system. A well-defined architecture establishes the logical organization of the code, delimiting functions and execution flows, which enables controlled integration between sensor reading, decision-making, and actuator control. Thus, adopting an appropriate architecture contributes to system predictability, facilitates debugging, and allows expansions or modifications without compromising software stability, acting as a computational structure responsible for organizing decision-making, behavior generation, and continuous adaptation of the robot [González-Santamarta et al., 2025].
+
+The proposed architecture for the sumo robot, named DarwinFlow, is based on a hierarchical and modular organization structured in functional layers. This approach aims to separate responsibilities, reduce coupling between different subsystems, and allow the generalization of the architecture to other autonomous mobile robots, regardless of sensors, actuators, or the specific task performed. The architecture, shown in the figure below, is composed of three main layers: high level, mid level, and low level, supervised by a transversal safety module responsible for ensuring safe system operation, and defined by a Ground Station that acts as an external configuration interface. Information flow is bidirectional: sensory data flows upward from the low level to the high level, while commands and references flow downward from upper layers to the actuators.
+
+![DarwinFlow Architecture](../images/DarwinFlow/DarwinFlow-Architecture.png)
+**DarwinFlow Architecture. Source: RobotLab**
+
+---
+
+## Architecture Generalization
+
+This architecture can be abstracted and applied to different types of systems while preserving the layered division between decision-making, control, and physical execution. This organization is valid not only for ground robots, such as line followers, exploration robots, or industrial AGVs, but also for UAVs and UUVs. In all these cases, sensors, actuators, and specific strategies change, but the hierarchical organization and information flow between layers remain essentially the same, highlighting the generality and scalability of the proposed architecture. In the table below, we can observe different types of systems that can use the proposed architecture and their respective mission objectives.
+
+### Examples of applicable autonomous systems and their mission objectives
+
+| Autonomous System    | Operational Context        | Objective / Mission                                                               |
+| -------------------- | -------------------------- | --------------------------------------------------------------------------------- |
+| Mini sumo robot      | Delimited arena            | Locate, engage, and physically push the opponent out of the valid area.           |
+| Generic mobile robot | Ground environment         | Navigate autonomously, identify targets or points of interest, and perform tasks. |
+| Industrial AGV       | Structured industrial site | Transport materials autonomously between predefined stations safely.              |
+| UAV                  | Air environment            | Perform monitoring, inspection, or autonomous navigation missions.                |
+| UUV                  | Underwater environment     | Perform inspection, exploration, or data collection in submerged environments.    |
+
+---
+
+## Hierarchical Layer Description
+
+### Ground Station
+
+The Ground Station (or operator base station) acts as an external configuration interface, used before the start of a match to define the mission objective, navigation strategy, and general operational parameters. These include, for example, the type of strategy used to search for the target, initial movement patterns, and engagement criteria. Additionally, the Ground Station is responsible for sending start and stop commands, enabling or disabling the robot remotely. Information from this block is forwarded to the embedded system as mission parameters and navigation configurations, which directly feed the action block.
+
+---
+
+### High Level
+
+At the high level, the action block coordinates the overall execution flow and robot behavior. Initially, the system remains in an initialization state, where safety conditions are verified. Once operation permission is granted, the robot enters initialization routines and then navigation, responsible for executing a defined strategy. During navigation, the system continuously evaluates perception data to determine whether a target has been found. When this condition is met, a transition occurs to the mission routine, which represents the final desired behavior.
+
+---
+
+### Mid Level
+
+The mid level concentrates perception and control blocks, responsible for transforming raw sensor data into coherent motion commands. The perception block continuously receives sensing data from the lower level and organizes it into two main functions: detection and estimation. Detection identifies relevant mission events, such as target presence, proximity to boundaries, or conditions requiring stopping. The estimation module processes this information to infer robot states such as position and velocity, providing a more robust representation of the robot’s dynamic state. These processed estimates are then forwarded to the control block. Based on the received control data, the system computes the necessary motion parameters. Speed control ensures appropriate velocity during routines, while orientation control ensures correct alignment with the environment. These parameters are continuously adjusted based on the estimated state and high-level objectives.
+
+---
+
+### Low Level
+
+At the low level are the sensing and actuation blocks, responsible for direct interaction with the physical environment. The sensing block is composed of sensors dedicated to target detection, boundary identification, and acquisition of position and velocity information. These sensors provide raw data to the system, which is forwarded to the mid level for processing and decision-making. The actuator block receives motion parameters computed by the control system and converts them into physical actions. The motor driver acts as a power interface, translating control commands into electrical signals suitable for the motors, which then move the robot.
+
+---
+
+### Safety Module
+
+Transversally across the architecture, the safety module plays a fundamental role in system reliability. It manages safety states such as standby mode, normal operation, and emergency stop. Remote activation provides the necessary commands to transition between these states, ensuring compliance with competition rules and allowing immediate interruption in critical situations. In case of emergency, this module overrides all other levels, placing the system into a safe state.
+
+---
+
+# Implementation of the Proposed Architecture in the Veteran Robot
+
+The system was implemented in the Visual Studio Code development environment using the ESP-IDF framework integrated with PlatformIO, aiming for greater control over build system configuration, debugging, and dependency management. The chosen embedded platform was the ESP32-S3 microcontroller, leveraging its parallel processing capabilities, support for advanced peripherals, and energy efficiency. Additionally, the 4D Systems gen4-ESP32-S3 (N16R8) board was used, which integrates expanded memory and graphical resources, facilitating integration with the sensing, control, and communication modules defined in the system architecture.
+
+---
+
+## Low Level
+
+This layer contains all modules responsible for sensor reading, motor actuation, and peripheral management. The goal of this separation is to abstract hardware details, allowing higher layers to use already processed information without needing to know ESP32-S3 registers or peripherals. The Motor_Task.h file is responsible for motor control. This module configures PWM channels, manages rotation direction through the DRV8871 H-bridge, and converts velocity values stored in global variables into electrical signals applied to the motors. Thus, control strategies only define the desired speed for each side of the robot, while the motor module handles signal generation. The firmware works with a logical abstraction of left and right motors, independent of the physical wiring. Desired speeds are stored in global variables and later converted into PWM signals during motor updates. Commands range from -1023 to +1023, where positive values correspond to forward motion, negative values to reverse motion, and zero to full stop.
+
+The Encoder_Task.h file reads incremental encoders attached to the motors. Its function is to count pulses generated during wheel movement, allowing determination of speed, displacement, and rotation direction. For this, the ESP32-S3 internal peripheral called Pulse Counter is used. The obtained values are stored in global structures used by motion control algorithms.
+
+The IMU_Task.h file handles communication with the LSM6DS3 inertial measurement unit via I2C. It configures the accelerometer and gyroscope, performs periodic sensor reads, and converts raw data into usable physical quantities for higher layers.
+
+The BorderSensors_Task.h file manages digital boundary sensors installed at the bottom of the robot. Its main function is to detect the white line delimiting the combat arena. In addition to individual left and right sensor readings, it also generates consolidated states that simplify decision-making. These states indicate whether no boundary is detected, only the left boundary, only the right boundary, or both simultaneously.
+
+The FOUROpponentSensors_Task.h file reads the four sensors responsible for opponent detection. It generates logical states representing the opponent’s relative position, such as left, right, diagonal, or front.
+
+The LED_Task.h file controls the signaling LEDs on the board. Although not directly involved in combat strategies, it is used for debugging, system state indication, and testing.
+
+Finally, the pinmap.h file centralizes all hardware definitions, mapping logical functions to physical microcontroller pins.
+
+---
+
+## Mid Level
+
+The mid-level layer organizes information from physical devices and creates abstractions used by combat strategies. The globalVariables.h file is the main communication mechanism between firmware modules, storing structures for sensors, motors, encoders, IMU, LEDs, and system states.
+
+The config.h file centralizes all project configuration, including compilation parameters, feature flags, operating frequencies, sensor/motor inversion, and hardware options. It also defines global variables representing system state and strategy control.
+
+This layer also provides space for more advanced processing algorithms, such as motion control (PID controllers), sensor fusion (IMU + encoders), and digital filtering to reduce noise and improve robustness.
+
+---
+
+## High Level
+
+The high-level layer contains the algorithms responsible for robot behavior during competition, including navigation, search, attack, and boundary recovery strategies.
+
+The Strategy_Init_7.h module implements the initialization routine executed at the start of a match.
+The Strategy_Search_Forward.h module defines a forward search behavior when no opponent is detected.
+The Strategy_Attack_DoubleFront.h module implements the main offensive behavior based on opponent sensor data, including directional adjustments and a pushing impulse routine.
+The Strategy_Border_180.h module implements the defensive boundary recovery strategy, performing a retreat followed by an approximate 180-degree rotation.
+
+These strategies are modular and expandable. The Select_strategy.h module manages strategy selection for each operating mode, acting as an intermediate layer that allows different strategies to be chosen without modifying core firmware logic. This also enables future integration with a Ground Station configuration interface.
+
+---
+
+## Ground Station and Safety Module
+
+The Ground Station corresponds to tools used for monitoring, configuration, and debugging during development. Through ESP32-S3 serial communication, it enables real-time monitoring of sensor readings, internal states, IMU data, encoder counts, and strategy states. It also supports future JSON-based configuration interfaces.
+
+The safety module ensures safe robot operation during testing and competition. It is implemented through MAR_Task.h, managing READY, START, and STOP states. When in READY or STOP, motors remain disabled and no strategy is executed.
+
+
+---
+
+
+# 🧬Arquitetura DarwinFlow [PT]
 
 O sistema DarwinFlow é inspirado em princípios da robótica cognitiva, área que combina camada de percepção para permitir que robôs interpretem o ambiente, lidem com incertezas e tomem decisões informadas [Hawes et al.,2017; Krichmar, 2018]. Em sistemas robóticos, a cognição refere-se à capacidade computacional de perceber, interpretar e agir em ambientes por meio de processos adaptativos, como aprendizado, inferência e integração de memória [Langley et al., 2020; Kotseruba and Tsotsos, 2020]. Embora o robô de sumô opere em um ambiente controlado, os desafios impostos pela dinâmica do combate, pela limitação sensorial e pela necessidade de resposta rápida tornam-no um caso relevante para a aplicação e estudo desses conceitos.
 
