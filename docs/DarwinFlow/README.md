@@ -9,7 +9,6 @@ The definition of an architecture is an element that helps ensure consistent imp
 
 The proposed architecture for the sumo robot, named DarwinFlow, is based on a hierarchical and modular organization structured in functional layers. This approach aims to separate responsibilities, reduce coupling between different subsystems, and allow the generalization of the architecture to other autonomous mobile robots, regardless of sensors, actuators, or the specific task performed. The architecture, shown in the figure below, is composed of three main layers: high level, mid level, and low level, supervised by a transversal safety module responsible for ensuring safe system operation, and defined by a Ground Station that acts as an external configuration interface. Information flow is bidirectional: sensory data flows upward from the low level to the high level, while commands and references flow downward from upper layers to the actuators.
 
-![DarwinFlow Architecture](../images/DarwinFlow/DarwinFlow-Architecture.png)
 **DarwinFlow Architecture. Source: RobotLab**
 
 ---
