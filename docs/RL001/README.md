@@ -12,8 +12,8 @@ Para a versão em Português, [clique aqui](#pt)
 
 ---
 
-# Title
-# subtitle
+## Title
+#### subtitle
 
 ---
 <br><br><br>
