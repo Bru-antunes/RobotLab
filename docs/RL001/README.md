@@ -65,7 +65,7 @@ A literatura demonstra ainda que sensores IR digitais podem ser aplicados além 
 
 O sensor IR digital opera fundamentado em um par de componentes eletrônicos: um transmissor (LED infravermelho), responsável pela emissão de radiação infravermelha invisível ao olho humano, e um receptor (fotodiodo), sensível ao mesmo comprimento de onda. Seu funcionamento ocorre quando a luz emitida atinge a superfície de um objeto e é refletida de volta para o receptor, alterando sua resistência e a tensão de saída de forma proporcional à intensidade da luz recebida \citep{A-Review-on-Sensor-Technologies}. A figura abaixo ilustra o princípio de funcionamento de um sensor IR.
 
-ADICIONAR IMAGEM AQUI 
+![Funcionamento do sensor](../images/RL001/OPERACAO_SENSOR_IR.png)
 
 Para processar esse sinal, o sensor utiliza um circuito comparador, que confronta a tensão gerada pelo fotodiodo com um limite predefinido ou ajustável \citep{Design-and-implementation-of-IoT, A-Review-Paper-on-Infrared-Sensor}. O resultado é uma saída digital binária (alto/baixo), que informa ao microcontrolador a presença de um obstáculo \citep{Infrared-Sensor-based-Self-Adaptive}. Devido à sua versatilidade, esse tipo de sensor é amplamente empregado em robótica para detecção e desvio de obstáculos em robôs móveis \citep{A-Review-on-Sensor-Technologies}. Além disso, pode ser utilizado em sistemas de comunicação entre dispositivos \citep{Dual-mode-Establishing}, aplicações na área da saúde \citep{An-efficient-pulse}, monitoramento de tráfego de veículos \citep{Infrared-Sensor-based-Self-Adaptive} e automação residencial.
 
